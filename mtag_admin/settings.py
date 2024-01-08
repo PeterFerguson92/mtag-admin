@@ -66,11 +66,11 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = (
     "http://localhost:4200",
-    "https://mtag-admin-production.up.railway.app/",
+    "https://mtag-admin-production.up.railway.app",
 )
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
-    "https://mtag-admin-production.up.railway.app/",
+    "https://mtag-admin-production.up.railway.app",
 ]
 CORS_ALLOW_ALL = False
 

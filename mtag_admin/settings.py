@@ -18,7 +18,7 @@ env = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, "prod.env"))
+environ.Env.read_env(os.path.join(BASE_DIR, "dev.env"))
 print("USING " + env("ENVIROMENT") + " SETTINGS")
 IS_DEV = env("ENVIROMENT") == "DEV"
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "members",
+    "activities",
 ]
 
 MIDDLEWARE = [
@@ -183,3 +184,16 @@ SECURE_SSL_REDIRECT = False
 SECURE_HSTS_SECONDS = 0
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+DATE_FORMAT = ( ( 'd-m-Y' ))
+DATE_INPUT_FORMATS = ( ('%d-%m-%Y'),)
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'Europe/Belfast'
+
+USE_I18N = True
+
+USE_L10N = False
+
+USE_TZ = False

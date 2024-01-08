@@ -1,1 +1,1 @@
-web: gunicorn dansah.wsgi --log-file -
+web: gunicorn mtag_admin.wsgi --log-file -

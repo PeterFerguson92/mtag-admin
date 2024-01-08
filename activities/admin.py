@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Weekly, Event
+from .models import Weekly, Event, Monthly
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
@@ -31,7 +31,7 @@ class WeeklyAdmin(admin.ModelAdmin):
     )
     
     
-@admin.register(Weekly)
+@admin.register(Monthly)
 class MonthlyAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
     filter_horizontal = ("events",)

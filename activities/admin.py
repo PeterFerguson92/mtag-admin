@@ -29,14 +29,13 @@ class WeeklyAdmin(admin.ModelAdmin):
         "title",
         "created_at",
     )
-    
-    
 @admin.register(Monthly)
 class MonthlyAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
     filter_horizontal = ("events",)
     fields = (
         "title",
+        "month",
         "events",
     )
     list_display = (

@@ -14,23 +14,23 @@ class ServicePlanning(models.Model):
     service_type = models.CharField(
         "Service Type", max_length=255, choices=SERVICES, blank=False, null=False
     )
-    date = models.DateField("Date", editable=True, blank=True, null=True)
-    mc = models.CharField("MC", max_length=255)
-    expected_mc = models.CharField("Expected MC", max_length=255)
-    worship_praise = models.CharField("Worship and Praise", max_length=255)
+    date = models.DateField("Date", editable=True, blank=False, null=False)
+    mc = models.CharField("MC", max_length=255, blank=True, null=True)
+    expected_mc = models.CharField("Expected MC", max_length=255,blank=True, null=True)
+    worship_praise = models.CharField("Worship and Praise", max_length=255, blank=True, null=True)
     expected_worship_praise = models.CharField(
-        "Expected Worship and Praise", max_length=255
+        "Expected Worship and Praise", max_length=255,blank=True, null=True
     )
-    bible_reading = models.CharField("Bible Reading", max_length=255)
-    expected_bible_reading = models.CharField("Expected Bible Reading", max_length=255)
-    mtag_news = models.CharField("MTAG news", max_length=255)
-    expected_mtag_news = models.CharField("Expected MTAG news", max_length=255)
-    offering_ministration = models.CharField("Offering & Ministration", max_length=255)
+    bible_reading = models.CharField("Bible Reading", max_length=255,blank=True, null=True)
+    expected_bible_reading = models.CharField("Expected Bible Reading", max_length=255,blank=True, null=True)
+    mtag_news = models.CharField("MTAG news", max_length=255, blank=True, null=True)
+    expected_mtag_news = models.CharField("Expected MTAG news", max_length=255, blank=True, null=True)
+    offering_ministration = models.CharField("Offering & Ministration", max_length=255, blank=True, null=True)
     expected_offering_ministration = models.CharField(
-        "Expected Offering & Ministration", max_length=255
+        "Expected Offering & Ministration", max_length=255, blank=True, null=True
     )
-    sermon = models.CharField("Sermon", max_length=255)
-    expected_sermon = models.CharField("Expected Sermon", max_length=255)
+    sermon = models.CharField("Sermon", max_length=255, blank=True, null=True)
+    expected_sermon = models.CharField("Expected Sermon", max_length=255, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

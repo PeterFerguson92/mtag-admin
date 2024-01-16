@@ -27,6 +27,7 @@ from mtag_admin import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/activities/", include("activities.urls")),
+    path("api/members/", include("members.urls")),
 ]
 
 urlpatterns += static(

@@ -1,36 +1,40 @@
 import csv
-from http.client import HTTPResponse
+from django.http import HttpResponse
 from django.contrib import admin
-from import_export.admin import ExportActionMixin
 
 # Register your models here.
 from .models import ServicePlanning
 
+def export_to_csv(modeladmin, request, queryset):
+    opts = modeladmin.model._meta
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment;" "filename={}.csv".format(
+        'service_outline_' + queryset[0].date.strftime('%d/%m/%Y')
+    )
+    writer = csv.writer(response)
+    writer.writerow(
+        [
+            "Item",
+            "Expected",
+            "Actual",
+        ]
+    )
 
-class ExportCsvMixin:
-    def export_to_csv(self, request, queryset):
-        qs = ServicePlanning.objects.all()
-        print(qs)
+    writer.writerow(["date", queryset[0].date.strftime('%d/%m/%Y'), queryset[0].date.strftime('%d/%m/%Y')])
+    writer.writerow(["MC", queryset[0].expected_mc, queryset[0].mc])
+    writer.writerow(["Worship & Praises", queryset[0].expected_worship_praise, queryset[0].worship_praise])
+    writer.writerow(["Bible Reading", queryset[0].expected_bible_reading, queryset[0].bible_reading])
+    writer.writerow(["MTAG News", queryset[0].expected_mtag_news, queryset[0].mtag_news])
+    writer.writerow(["Offering & Ministration", queryset[0].expected_offering_ministration, queryset[0].offering_ministration])
+    writer.writerow(["Sermon", queryset[0].expected_sermon, queryset[0].sermon])
 
-        # Create the HttpResponse object with the appropriate CSV header.
-        response = HTTPResponse(content_type="text/csv")
-        response["Content-Disposition"] = 'attachment; filename="export_file.csv"'
+    return response
 
-        wr
-        writer = csv.writer(response)
-
-        for rule in qs:
-            writer.writerow([rule.service_type])
-            for c in rule:
-                writer.writerow([c.sermon])
-
-        return response
-
-    export_to_csv.short_description = "Export Selected"
+export_to_csv.short_description = "Export to CSV"  # short description
 
 
 @admin.register(ServicePlanning)
-class EventAdmin(ExportActionMixin, admin.ModelAdmin):
+class EventAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
     fields = (
         "title",
@@ -55,5 +59,4 @@ class EventAdmin(ExportActionMixin, admin.ModelAdmin):
         "date",
         "created_at",
     )
-    actions = ["export_to_csv"]
-
+    actions = [export_to_csv]

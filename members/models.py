@@ -1,5 +1,4 @@
 from django.db import models
-import uuid
 
 DEPARTMENTS = (
     ("MEN", "Men's Ministry"),
@@ -10,13 +9,13 @@ DEPARTMENTS = (
 )
 
 MEMBER_TYPE = (
-    ("FULL", "Full Member"),
-    ("VISITOR", "Visiting Member"),
+    ("FULL MEMBER", "Full Member"),
+    ("VISITOR", "Visitor"),
 )
 
 SEX_CHOICES = (
-        ('F', 'Female',),
-        ('M', 'Male',),
+        ('Female', 'Female',),
+        ('Male', 'Male',),
     )
 
 # Create your models here.
@@ -25,7 +24,7 @@ class Member(models.Model):
     middle_name = models.CharField("Middle Name", max_length=255,blank=True)
     surname = models.CharField("Surname", max_length=255,blank=False)
     telephone = models.CharField("Telephone", max_length=255,blank=False)
-    sex = models.CharField(max_length=1,choices=SEX_CHOICES)
+    sex = models.CharField(max_length=50,choices=SEX_CHOICES)
     department = models.CharField("Department",max_length=255,choices=DEPARTMENTS, blank=True, null=True)
     member_type = models.CharField("Member type",max_length=255,choices=MEMBER_TYPE, default='Full Member')
     membership_start = models.DateField("Membership start", max_length=255, blank=True, null=True)

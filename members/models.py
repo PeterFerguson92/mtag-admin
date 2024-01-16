@@ -9,6 +9,11 @@ DEPARTMENTS = (
 
 )
 
+MEMBER_TYPE = (
+    ("FULL", "Full Member"),
+    ("VISITOR", "Visiting Member"),
+)
+
 SEX_CHOICES = (
         ('F', 'Female',),
         ('M', 'Male',),
@@ -21,7 +26,9 @@ class Member(models.Model):
     surname = models.CharField("Surname", max_length=255,blank=False)
     telephone = models.CharField("Telephone", max_length=255,blank=False)
     sex = models.CharField(max_length=1,choices=SEX_CHOICES)
-    department = models.CharField(max_length=255,choices=DEPARTMENTS)
+    department = models.CharField("Department",max_length=255,choices=DEPARTMENTS)
+    member_type = models.CharField("Member type",max_length=255,choices=MEMBER_TYPE, default='Full Member')
+    membership_start = models.DateField("Membership start", max_length=255, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

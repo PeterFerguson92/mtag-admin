@@ -32,11 +32,9 @@ class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255)
     description = models.TextField("Description", max_length=1024)
-    day = models.CharField("Day", max_length=255, choices=DAYS, blank=False, null=False)
-    time = models.TimeField(
-        "Time", auto_now=False, auto_now_add=False, blank=False, null=False
-    )
-    date = models.DateField("Date", editable=True, blank=True, null=True)
+    day = models.CharField("Day", max_length=255, choices=DAYS, blank=True, null=True)
+    start_date = models.DateTimeField("Start Date", editable=True, blank=True, null=True)
+    end_date = models.DateTimeField("End Date", editable=True, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:
@@ -90,8 +88,9 @@ class Monthly(models.Model):
     def __unicode__(self):
         return "%s: /n %s %s  %s %s" % (
             self.title,
+            self.month,
             self.created_at,
         )
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.title} {self.month}"

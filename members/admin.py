@@ -12,9 +12,11 @@ class PersonAdmin(admin.ModelAdmin):
         "surname",
         "telephone",
         "sex",
-        "department"
+        "department",
+        "member_type",
+        "membership_start",
     )
-    list_display = ("name", "middle_name","surname", "created_at")
+    list_display = ("name", "middle_name","surname", "member_type")
     list_filter = (
         "name",
         "surname",

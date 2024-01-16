@@ -6,7 +6,7 @@ from .models import Weekly, Event, Monthly
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
-    fields = ("title", "description", "day", "time", "date")
+    fields = ("title", "description", "day","start_date", "end_date")
     list_display = (
         "title",
         "description",
@@ -40,9 +40,9 @@ class MonthlyAdmin(admin.ModelAdmin):
     )
     list_display = (
         "title",
+        "month",
         "created_at",
     )
     list_filter = (
-        "title",
-        "created_at",
+        "month",
     )

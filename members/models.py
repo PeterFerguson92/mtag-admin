@@ -27,7 +27,7 @@ class Member(models.Model):
     postcode = models.CharField("Postcode",max_length=255, blank=True, null=True)
     address = models.CharField("Address",max_length=255, blank=True, null=True)
     date_of_birth = models.CharField("Date Of Birth",max_length=255, blank=True, null=True)
-    age = models.IntegerField("Age",max_length=255, blank=True, null=True)
+    age = models.IntegerField("Age", blank=True, null=True)
     sex = models.CharField(max_length=50,choices=SEX_CHOICES)
     department = models.CharField("Department",max_length=255,choices=DEPARTMENTS, blank=True, null=True)
     member_type = models.CharField("Member type",max_length=255,choices=MEMBER_TYPE, default='Full Member')

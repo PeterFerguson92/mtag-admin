@@ -1,5 +1,6 @@
-from django.db import models
 import uuid
+from django.db import models
+from .uploadfiles import (event_upload_image_path)
 
 DAYS = (
     ("01-MONDAY", "Monday"),
@@ -35,6 +36,13 @@ class Event(models.Model):
     day = models.CharField("Day", max_length=255, choices=DAYS, blank=True, null=True)
     start_date = models.DateTimeField("Start Date", editable=True, blank=True, null=True)
     end_date = models.DateTimeField("End Date", editable=True, blank=True, null=True)
+    location = models.CharField("Location", max_length=255)
+    cover_image_path = models.ImageField(
+        "Cover image",
+        upload_to=event_upload_image_path,
+        null=True,
+        blank=True,
+    )
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

@@ -32,7 +32,8 @@ MONTH = (
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255)
-    description = models.TextField("Description", max_length=1024)
+    short_description = models.TextField("Short Description", max_length=400, default='')
+    description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
     day = models.CharField("Day", max_length=255, choices=DAYS, blank=True, null=True)
     start_date = models.DateField("Start Date", editable=True, blank=True, null=True)
     end_date = models.DateField("End Date", editable=True, blank=True, null=True)

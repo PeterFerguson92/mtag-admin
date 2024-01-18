@@ -8,6 +8,7 @@ class EventAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
     fields = (
         "title",
+        "short_description",
         "description",
         "day",
         "start_date",
@@ -19,7 +20,7 @@ class EventAdmin(admin.ModelAdmin):
     )
     list_display = (
         "title",
-        "description",
+        "short_description",
         "created_at",
     )
 

@@ -2,8 +2,6 @@ from rest_framework import status, generics
 from rest_framework.response import Response
 
 from .serializers import MemberSerializer
-from .models import Member
-
 
 class MemberView(generics.GenericAPIView):
      def post(self, request, *args, **kwargs):

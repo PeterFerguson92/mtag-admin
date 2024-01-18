@@ -5,7 +5,6 @@ from datetime import datetime, date
 from .serializers import EventSerializer, WeeklySerializer, ProgramSerializer
 from .models import Event, Program, Weekly
 
-
 class EventView(generics.GenericAPIView):
     serializer_class = EventSerializer
     queryset = Event.objects.all()

@@ -10,6 +10,9 @@ DAYS = (
     ("05-FRIDAY", "Friday"),
     ("06-SATURDAY", "Saturday"),
     ("07-SUNDAY", "Sunday"),
+    ("08-SUNDAY", "Sunday 1st Service"),
+    ("09-SUNDAY", "Sunday 2nd Service"),
+
 )
 
 MONTH = (
@@ -83,12 +86,46 @@ class Weekly(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+    
+class Program(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField("Title", max_length=255)
+    short_description = models.TextField("Short Description", max_length=400, default='')
+    description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
+    speaker = models.CharField("speaker", max_length=255, blank=True, null=True)
+    start_date = models.DateField("Start Date", editable=True, blank=True, null=True)
+    end_date = models.DateField("End Date", editable=True, blank=True, null=True)
+    start_time = models.TimeField("Start Time", editable=True, blank=True, null=True)
+    end_time = models.TimeField("End Time", editable=True, blank=True, null=True)
+    location = models.CharField("Location", max_length=255)
+    cover_image_path = models.ImageField(
+        "Cover image",
+        upload_to=event_upload_image_path,
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+    class Meta:
+        ordering = ("title", "created_at")
+        verbose_name = "Program"
+        verbose_name_plural = "Programs"
+
+    def __unicode__(self):
+        return "%s: /n %s %s  %s %s" % (
+            self.title,
+            self.short_description,
+            self.created_at,
+        )
+
+    def __str__(self):
+        return f"{self.title}"
 
 class Monthly(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255, default="Monthly Activities")
     month = models.CharField("Month", max_length=255, choices=MONTH, blank=False, null=False)
-    events = models.ManyToManyField(to=Event)
+    programs = models.ManyToManyField(to=Program)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

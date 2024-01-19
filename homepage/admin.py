@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Homepage, Banner, Block
+from .models import AboutUs, Homepage, Banner, Block
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
@@ -34,14 +34,39 @@ class BlockAdmin(admin.ModelAdmin):
         "created_at",
     )
     
+@admin.register(AboutUs)
+class BlockAdmin(admin.ModelAdmin):
+    search_fields = ("title__startswith",)
+    fields = (
+        "homepage_display_header",
+        "homepage_display_title",
+        "homepage_display_text",
+        "homepage_display_info_1",
+        "homepage_display_info_1_text",
+        "homepage_display_info_2",
+        "homepage_display_info_2_text",
+        "section_display_header",
+        "section_display_title",
+        "section_display_text",
+        "section_display_info_1",
+        "section_display_info_1_text",
+        "section_display_info_2",
+        "section_display_info_2_text",
+    )
+    list_display = (
+        "title",
+        "created_at",
+    )
+    
 @admin.register(Homepage)
 class HomepageAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
-    filter_horizontal = ("banners","blocks",)
+    filter_horizontal = ("banners","blocks")
     fields = (
         "title",
         "banners",
         "blocks",
+        "aboutUs",
     )
     list_display = (
         "title",

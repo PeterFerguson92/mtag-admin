@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "activities",
     "service",
     "ministries",
+    "homepage",
 ]
 
 MIDDLEWARE = [

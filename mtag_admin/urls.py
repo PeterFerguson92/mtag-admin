@@ -29,7 +29,7 @@ urlpatterns = [
     path("api/activities/", include("activities.urls")),
     path("api/members/", include("members.urls")),
     path("api/ministries/", include("ministries.urls")),
-
+    path("api/homepage/", include("homepage.urls")),
 ]
 
 urlpatterns += static(

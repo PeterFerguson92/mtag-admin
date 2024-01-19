@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from homepage.uploadfiles import homepage_banner_upload_image_path, homepage_video_cover_upload_image_path
+from homepage.uploadfiles import homepage_banner_upload_image_path, homepage_leader_cover_upload_image_path, homepage_video_cover_upload_image_path
 
 # Create your models here.
 POSITIONS = (
@@ -171,6 +171,57 @@ class Media(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+class Leader(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    fullName = models.CharField("Full Name", max_length=300)
+    role = models.CharField("Role", max_length=300)
+    description = models.TextField("Description", max_length=700)
+    phone = models.CharField("Phone Number", max_length=100)
+    address = models.CharField("Address", max_length=200, blank=True, null=True)
+    image = models.ImageField(
+        "Image",
+        upload_to=homepage_leader_cover_upload_image_path,
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+    class Meta:
+        ordering = ("fullName", "created_at")
+        verbose_name = "Leader"
+        verbose_name_plural = "Leaders"
+
+    def __unicode__(self):
+        return "%s: /n %s %s  %s %s" % (
+            self.fullName,
+            self.created_at,
+        )
+
+    def __str__(self):
+        return f"{self.fullName}"
+
+class LeadershipBoard(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField("Title", max_length=80, default='Leadership Board')
+    header = models.CharField("Section Header", max_length=80, blank=True, null=True)
+    section_title = models.CharField("Section Title", max_length=80, blank=True, null=True)
+    leaders = models.ManyToManyField(to=Leader)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+    class Meta:
+        ordering = ("title", "created_at")
+        verbose_name = "Leadership Board"
+        verbose_name_plural = "Leadership Board"
+
+    def __unicode__(self):
+        return "%s: /n %s %s  %s %s" % (
+            self.title,
+            self.created_at,
+        )
+
+    def __str__(self):
+        return f"{self.title}"
     
 class Homepage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -180,6 +231,7 @@ class Homepage(models.Model):
     aboutUs = models.OneToOneField(AboutUs, on_delete=models.CASCADE, null=True)
     details = models.OneToOneField(Details, on_delete=models.CASCADE, null=True)
     media = models.OneToOneField(Media, on_delete=models.CASCADE, null=True)
+    leadershipBoard = models.OneToOneField(LeadershipBoard, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

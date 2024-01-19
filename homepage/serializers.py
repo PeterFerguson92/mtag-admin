@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import AboutUs, Banner, Block, Details, Homepage, Media, Video
+from .models import AboutUs, Banner, Block, Details, Homepage, Leader, LeadershipBoard, Media, Video
 
 
 class BannerSerializer(serializers.ModelSerializer):
@@ -32,6 +32,17 @@ class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
         fields = "__all__"
+
+class LeaderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Leader
+        fields = "__all__"
+
+class LeadershipBoardSerializer(serializers.ModelSerializer):
+    leaders = LeaderSerializer(many=True, read_only=True)
+    class Meta:
+        model = LeadershipBoard
+        fields = "__all__"
         
 class HomepageSerializer(serializers.ModelSerializer):
     banners = BannerSerializer(many=True, read_only=True)
@@ -39,6 +50,7 @@ class HomepageSerializer(serializers.ModelSerializer):
     aboutUs = AboutUsSerializer(many=False, read_only=True)
     details = DetailSerializer(many=False, read_only=True)
     media = MediaSerializer(many=False, read_only=True)
+    leadershipBoard = LeadershipBoardSerializer(many=False, read_only=True)
     class Meta:
         model = Homepage
         fields = "__all__"

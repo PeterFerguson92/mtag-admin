@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import AboutUs, Details, Homepage, Banner, Block, Media, Video
+from .models import AboutUs, Details, Homepage, Banner, Block, Leader, LeadershipBoard, Media, Video
 
 
 @admin.register(Banner)
@@ -104,12 +104,35 @@ class MediaAdmin(admin.ModelAdmin):
         "created_at",
     )
 
+@admin.register(Leader)
+class LeaderAdmin(admin.ModelAdmin):
+    search_fields = ("fullName__startswith",)
+    fields = ("fullName", "role", "description", "phone", "address", "image")
+    list_display = (
+        "fullName",
+        "role",
+    )
+    
+@admin.register(LeadershipBoard)
+class LeadershipBoardAdmin(admin.ModelAdmin):
+    search_fields = ("title__startswith",)
+    filter_horizontal = ("leaders",)
+    fields = (
+        "title",
+        "header",
+        "section_title",
+        "leaders",
+    )
+    list_display = (
+        "title",
+        "created_at",
+    )
 
 @admin.register(Homepage)
 class HomepageAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
     filter_horizontal = ("banners", "blocks")
-    fields = ("title", "banners", "blocks", "aboutUs", "details", "media")
+    fields = ("title", "banners", "blocks", "aboutUs", "details", "media", "leadershipBoard")
     list_display = (
         "title",
         "created_at",

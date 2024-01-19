@@ -38,11 +38,36 @@ class Banner(models.Model):
     def __str__(self):
         return f"{self.title}"
 
+class Block(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField("Title", max_length=255, default='Block Section')
+    block_1_title = models.CharField("Block 1 Title", max_length=255)
+    block_1_text = models.TextField("Block 1 Text", max_length=1024)
+    block_2_title = models.CharField("Block 2 Title", max_length=255)
+    block_2_text = models.TextField("Block 2 Text", max_length=1024)
+    block_3_title = models.CharField("Block 3 Title", max_length=255)
+    block_3_text = models.TextField("Block 3 Text", max_length=1024)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
 
+    class Meta:
+        ordering = ("title", "created_at")
+        verbose_name = "Block"
+        verbose_name_plural = "Blocks"
+
+    def __unicode__(self):
+        return "%s: /n %s %s  %s %s" % (
+            self.title,
+            self.created_at,
+        )
+
+    def __str__(self):
+        return f"{self.title}"
+    
 class Homepage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255, default="Homepage")
     banners = models.ManyToManyField(to=Banner)
+    blocks = models.ManyToManyField(to=Block)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

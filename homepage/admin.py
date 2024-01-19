@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import AboutUs, Details, Homepage, Banner, Block
+from .models import AboutUs, Details, Homepage, Banner, Block, Media, Video
+
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
@@ -17,7 +18,8 @@ class BannerAdmin(admin.ModelAdmin):
         "text",
         "created_at",
     )
-    
+
+
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
@@ -33,7 +35,8 @@ class BlockAdmin(admin.ModelAdmin):
         "title",
         "created_at",
     )
-    
+
+
 @admin.register(AboutUs)
 class BlockAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
@@ -57,7 +60,8 @@ class BlockAdmin(admin.ModelAdmin):
         "title",
         "created_at",
     )
-    
+
+
 @admin.register(Details)
 class DetailAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
@@ -71,18 +75,41 @@ class DetailAdmin(admin.ModelAdmin):
         "title",
         "created_at",
     )
-    
+
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+    search_fields = ("title__startswith",)
+    fields = ("title", "description", "date", "image", "url", "featured")
+    list_display = (
+        "title",
+        "featured",
+        "description",
+        "created_at",
+    )
+
+
+@admin.register(Media)
+class MediaAdmin(admin.ModelAdmin):
+    search_fields = ("title__startswith",)
+    filter_horizontal = ("videos",)
+    fields = (
+        "title",
+        "videos_header",
+        "videos_title",
+        "videos",
+    )
+    list_display = (
+        "title",
+        "created_at",
+    )
+
+
 @admin.register(Homepage)
 class HomepageAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
-    filter_horizontal = ("banners","blocks")
-    fields = (
-        "title",
-        "banners",
-        "blocks",
-        "aboutUs",
-        "details"
-    )
+    filter_horizontal = ("banners", "blocks")
+    fields = ("title", "banners", "blocks", "aboutUs", "details", "media")
     list_display = (
         "title",
         "created_at",

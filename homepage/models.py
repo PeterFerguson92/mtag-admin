@@ -97,6 +97,29 @@ class AboutUs(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+class Details(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField("Title", max_length=255, default='Church Details')
+    info_text_1 = models.CharField("Info Text 1", max_length=80, blank=True, null=True)
+    info_content_1 = models.CharField("Info Content 1", max_length=80, blank=True, null=True)
+    info_text_2 = models.CharField("Info Text 2", max_length=80, blank=True, null=True)
+    info_content_2 = models.CharField("Info Content 2", max_length=80, blank=True, null=True)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+    class Meta:
+        ordering = ("title", "created_at")
+        verbose_name = "Details"
+        verbose_name_plural = "Details"
+
+    def __unicode__(self):
+        return "%s: /n %s %s  %s %s" % (
+            self.title,
+            self.created_at,
+        )
+
+    def __str__(self):
+        return f"{self.title}"
     
 class Homepage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -104,6 +127,7 @@ class Homepage(models.Model):
     banners = models.ManyToManyField(to=Banner)
     blocks = models.ManyToManyField(to=Block)
     aboutUs = models.OneToOneField(AboutUs, on_delete=models.CASCADE, null=True)
+    details = models.OneToOneField(Details, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

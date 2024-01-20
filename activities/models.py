@@ -38,8 +38,8 @@ class Event(models.Model):
     short_description = models.TextField("Short Description", max_length=400, default='')
     description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
     day = models.CharField("Day", max_length=255, choices=DAYS)
-    start_time = models.TimeField("Start Time", editable=True, null=True)
-    end_time = models.TimeField("End Time", editable=True, null=True)
+    start_time = models.TimeField("Start Time", editable=True)
+    end_time = models.TimeField("End Time", editable=True)
     location = models.CharField("Location", max_length=255)
     cover_image_path = models.ImageField(
         "Cover image",
@@ -92,10 +92,10 @@ class Program(models.Model):
     short_description = models.TextField("Short Description", max_length=400, default='')
     description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
     speaker = models.CharField("speaker", max_length=255, blank=True, null=True)
-    start_date = models.DateField("Start Date", editable=True, null=True)
-    end_date = models.DateField("End Date", editable=True, null=True)
-    start_time = models.TimeField("Start Time", editable=True, null=True)
-    end_time = models.TimeField("End Time", editable=True, null=True)
+    start_date = models.DateField("Start Date", editable=True)
+    end_date = models.DateField("End Date", editable=True)
+    start_time = models.TimeField("Start Time", editable=True)
+    end_time = models.TimeField("End Time", editable=True)
     location = models.CharField("Location", max_length=255)
     cover_image_path = models.ImageField(
         "Cover image",

@@ -1,7 +1,17 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import AboutUs, Details, Homepage, Banner, Block, Leader, LeadershipBoard, Media, Video
+from .models import (
+    AboutUs,
+    Details,
+    Homepage,
+    Banner,
+    Block,
+    Leader,
+    LeadershipBoard,
+    Media,
+    Video,
+)
 
 
 @admin.register(Banner)
@@ -48,6 +58,7 @@ class AboutUsAdmin(admin.ModelAdmin):
         "homepage_display_info_1_text",
         "homepage_display_info_2",
         "homepage_display_info_2_text",
+        "homepage_image",
         "section_display_header",
         "section_display_title",
         "section_display_text",
@@ -108,6 +119,7 @@ class MediaAdmin(admin.ModelAdmin):
         "created_at",
     )
 
+
 @admin.register(Leader)
 class LeaderAdmin(admin.ModelAdmin):
     search_fields = ("fullName__startswith",)
@@ -116,7 +128,8 @@ class LeaderAdmin(admin.ModelAdmin):
         "fullName",
         "role",
     )
-    
+
+
 @admin.register(LeadershipBoard)
 class LeadershipBoardAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
@@ -132,13 +145,26 @@ class LeadershipBoardAdmin(admin.ModelAdmin):
         "created_at",
     )
 
+
 @admin.register(Homepage)
 class HomepageAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
     filter_horizontal = ("banners", "blocks")
-    fields = ("title", "banners", "blocks", "aboutUs", "details", "media", "leadershipBoard")
+    fields = (
+        "title",
+        "banners",
+        "blocks",
+        "aboutUs",
+        "details",
+        "media",
+        "leadershipBoard",
+        "banner_background_image",
+        "leadership_board_background_image",
+    )
     list_display = (
         "title",
+        "banner_background_image",
+        "leadership_board_background_image",
         "created_at",
     )
     list_filter = (

@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from homepage.uploadfiles import homepage_about_us_cover_upload_image_path, homepage_banner_upload_image_path, homepage_leader_cover_upload_image_path, homepage_video_cover_upload_image_path
+from homepage.uploadfiles import homepage_about_us_cover_upload_image_path, homepage_background_upload_image_path, homepage_banner_upload_image_path, homepage_leader_cover_upload_image_path, homepage_video_cover_upload_image_path
 
 # Create your models here.
 POSITIONS = (
@@ -74,14 +74,19 @@ class AboutUs(models.Model):
     homepage_display_info_1_text = models.TextField("Homepage Display Info 1 Text", max_length=180, blank=True, null=True)
     homepage_display_info_2 = models.CharField("Homepage Display Info 2 Title", max_length=80, blank=True, null=True)
     homepage_display_info_2_text = models.TextField("Homepage Display Info 2 Text", max_length=180, blank=True, null=True)
-    
+    homepage_image = models.ImageField(
+        "Homepage Image",
+        upload_to=homepage_about_us_cover_upload_image_path,
+        null=True,
+        blank=True,
+    )
     section_display_header = models.CharField("Section Display Header", max_length=80, blank=True, null=True)
     section_display_title = models.CharField("Section Display Title", max_length=80)
     section_display_text = models.TextField("Section Display Text", max_length=180)
     section_display_info_1 = models.CharField("Section Display Info 1 Title", max_length=80, blank=True, null=True)
-    section_display_info_1_text = models.TextField("Section Display Info 1 Text", max_length=180, blank=True, null=True)
+    section_display_info_1_text = models.TextField("Section Display Info 1 Text", max_length=255, blank=True, null=True)
     section_display_info_2 = models.CharField("Section Display Info 2 Title", max_length=80, blank=True, null=True)
-    section_display_info_2_text = models.TextField("Section Display Info 2 Text", max_length=180, blank=True, null=True)
+    section_display_info_2_text = models.TextField("Section Display Info 2 Text", max_length=255, blank=True, null=True)
     
     image_1 = models.ImageField(
         "Image 1",
@@ -258,6 +263,18 @@ class Homepage(models.Model):
     details = models.OneToOneField(Details, on_delete=models.CASCADE, null=True)
     media = models.OneToOneField(Media, on_delete=models.CASCADE, null=True)
     leadershipBoard = models.OneToOneField(LeadershipBoard, on_delete=models.CASCADE, null=True)
+    banner_background_image = models.ImageField(
+        "Banner Background Image",
+        upload_to=homepage_background_upload_image_path,
+        null=True,
+        blank=True,
+    )
+    leadership_board_background_image = models.ImageField(
+        "Leadership Board Background Image",
+        upload_to=homepage_background_upload_image_path,
+        null=True,
+        blank=True,
+    )
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

@@ -40,6 +40,8 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "rest_framework",
     "corsheaders",
+    "django_non_dark_admin",
     "members",
     "activities",
     "service",

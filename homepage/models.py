@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from homepage.uploadfiles import homepage_about_us_cover_upload_image_path, homepage_background_upload_image_path, homepage_banner_upload_image_path, homepage_leader_cover_upload_image_path, homepage_video_cover_upload_image_path
+from homepage.uploadfiles import homepage_about_us_cover_upload_image_path, homepage_background_upload_image_path, homepage_banner_upload_image_path, homepage_leader_cover_upload_image_path, homepage_video_cover_upload_image_path, leader_image_restriction, video_image_restriction
 
 # Create your models here.
 POSITIONS = (
@@ -159,6 +159,7 @@ class Video(models.Model):
     date = models.DateField("Date", blank=True, null=True)
     image = models.ImageField(
         "Image",
+        validators=[video_image_restriction],
         upload_to=homepage_video_cover_upload_image_path,
         null=True,
         blank=True,
@@ -212,6 +213,7 @@ class Leader(models.Model):
     address = models.CharField("Address", max_length=200, blank=True, null=True)
     image = models.ImageField(
         "Image",
+        validators=[leader_image_restriction],
         upload_to=homepage_leader_cover_upload_image_path,
         null=True,
         blank=True,

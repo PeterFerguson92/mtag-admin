@@ -1,6 +1,7 @@
 import os
 import random
-
+from django.core.exceptions import ValidationError
+from django.core.files.images import get_image_dimensions
 
 def get_filename_ext(filepath):
     base_name = os.path.basename(filepath)
@@ -46,3 +47,13 @@ def homepage_leader_cover_upload_image_path(instance, filename):
     return "homepage/leader/{final_filename}".format(
         new_filename=new_filename, final_filename=final_filename
     )
+
+def leader_image_restriction(image):
+    image_width, image_height = get_image_dimensions(image)
+    if image_width >= 466 or image_height >= 494:
+        raise ValidationError('Image width needs to be less than height: 494 px width: 466 px')
+
+def video_image_restriction(image):
+    image_width, image_height = get_image_dimensions(image)
+    if image_width >= 560 or image_height >= 429:
+        raise ValidationError('Image width needs to be less than height: 429 px width: 560 px')

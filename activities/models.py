@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from .uploadfiles import (event_upload_image_path)
+from .uploadfiles import (event_image_restriction, event_upload_image_path)
 
 DAYS = (
     ("01-MONDAY", "Monday"),
@@ -37,14 +37,13 @@ class Event(models.Model):
     title = models.CharField("Title", max_length=255)
     short_description = models.TextField("Short Description", max_length=400, default='')
     description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
-    day = models.CharField("Day", max_length=255, choices=DAYS, blank=True, null=True)
-    start_date = models.DateField("Start Date", editable=True, blank=True, null=True)
-    end_date = models.DateField("End Date", editable=True, blank=True, null=True)
-    start_time = models.TimeField("Start Time", editable=True, blank=True, null=True)
-    end_time = models.TimeField("End Time", editable=True, blank=True, null=True)
+    day = models.CharField("Day", max_length=255, choices=DAYS)
+    start_time = models.TimeField("Start Time", editable=True)
+    end_time = models.TimeField("End Time", editable=True)
     location = models.CharField("Location", max_length=255)
     cover_image_path = models.ImageField(
         "Cover image",
+        validators=[event_image_restriction],
         upload_to=event_upload_image_path,
         null=True,
         blank=True,
@@ -100,6 +99,7 @@ class Program(models.Model):
     location = models.CharField("Location", max_length=255)
     cover_image_path = models.ImageField(
         "Cover image",
+        validators=[event_image_restriction],
         upload_to=event_upload_image_path,
         null=True,
         blank=True,

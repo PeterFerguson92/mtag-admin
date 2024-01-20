@@ -48,12 +48,32 @@ def homepage_leader_cover_upload_image_path(instance, filename):
         new_filename=new_filename, final_filename=final_filename
     )
 
+def homepage_banner_image_restriction(image):
+    image_width, image_height = get_image_dimensions(image)
+    if image_width > 203 or image_height > 223:
+        raise ValidationError('Image width needs to be less than height: 223 px width: 204 px')
+    
+def homepage_background_image_restriction(image):
+    image_width, image_height = get_image_dimensions(image)
+    if image_width > 1921 or image_height > 905:
+        raise ValidationError('Image width needs to be less than height: 905 px width: 1921 px')
+    
+def homepage_about_us_image_restriction(image):
+    image_width, image_height = get_image_dimensions(image)
+    if image_width > 371 or image_height > 421:
+        raise ValidationError('Image width needs to be less than height: 421 px width: 371 px')
+
+def about_us_image_restriction(image):
+    image_width, image_height = get_image_dimensions(image)
+    if image_width > 271 or image_height > 301:
+        raise ValidationError('Image width needs to be less than height: 301 px width: 271 px')
+
 def leader_image_restriction(image):
     image_width, image_height = get_image_dimensions(image)
-    if image_width >= 466 or image_height >= 494:
-        raise ValidationError('Image width needs to be less than height: 494 px width: 466 px')
+    if image_width > 467 or image_height > 495:
+        raise ValidationError('Image width needs to be less than height: 495 px width: 467 px')
 
 def video_image_restriction(image):
     image_width, image_height = get_image_dimensions(image)
-    if image_width >= 560 or image_height >= 429:
-        raise ValidationError('Image width needs to be less than height: 429 px width: 560 px')
+    if image_width > 561 or image_height > 430:
+        raise ValidationError('Image width needs to be less than height: 430 px width: 561 px')

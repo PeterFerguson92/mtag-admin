@@ -11,8 +11,6 @@ class EventAdmin(admin.ModelAdmin):
         "short_description",
         "description",
         "day",
-        "start_date",
-        "end_date",
         "start_time",
         "end_time",
         "location",

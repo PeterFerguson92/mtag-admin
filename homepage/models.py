@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from homepage.uploadfiles import homepage_about_us_cover_upload_image_path, homepage_background_upload_image_path, homepage_banner_upload_image_path, homepage_leader_cover_upload_image_path, homepage_video_cover_upload_image_path, leader_image_restriction, video_image_restriction
+from homepage.uploadfiles import *
 
 # Create your models here.
 POSITIONS = (
@@ -15,6 +15,7 @@ class Banner(models.Model):
     text = models.TextField("Text", max_length=1024, blank=True, null=True)
     image = models.ImageField(
         "Image",
+        validators=[homepage_banner_image_restriction],
         upload_to=homepage_banner_upload_image_path,
         null=True,
         blank=True,
@@ -76,6 +77,7 @@ class AboutUs(models.Model):
     homepage_display_info_2_text = models.TextField("Homepage Display Info 2 Text", max_length=180, blank=True, null=True)
     homepage_image = models.ImageField(
         "Homepage Image",
+        validators=[homepage_about_us_image_restriction],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
@@ -90,24 +92,28 @@ class AboutUs(models.Model):
     
     image_1 = models.ImageField(
         "Image 1",
+        validators=[about_us_image_restriction],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
     )
     image_2 = models.ImageField(
         "Image 2",
+        validators=[about_us_image_restriction],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
     )
     image_3 = models.ImageField(
         "Image 3",
+        validators=[about_us_image_restriction],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
     )
     image_4 = models.ImageField(
         "Image 4",
+        validators=[about_us_image_restriction],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
@@ -213,6 +219,7 @@ class Leader(models.Model):
     address = models.CharField("Address", max_length=200, blank=True, null=True)
     image = models.ImageField(
         "Image",
+        validators=[leader_image_restriction],
         upload_to=homepage_leader_cover_upload_image_path,
         null=True,
         blank=True,
@@ -266,12 +273,14 @@ class Homepage(models.Model):
     leadershipBoard = models.OneToOneField(LeadershipBoard, on_delete=models.CASCADE, null=True)
     banner_background_image = models.ImageField(
         "Banner Background Image",
+        validators=[homepage_background_image_restriction],
         upload_to=homepage_background_upload_image_path,
         null=True,
         blank=True,
     )
     leadership_board_background_image = models.ImageField(
         "Leadership Board Background Image",
+        validators=[homepage_background_image_restriction],
         upload_to=homepage_background_upload_image_path,
         null=True,
         blank=True,

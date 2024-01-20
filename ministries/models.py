@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 
-from ministries.uploadfiles import ministries_upload_image_path
+from ministries.uploadfiles import ministries_upload_image_path, ministry_cover_image_restriction, ministry_gallery_image_restriction
 
 # Create your models here.
 class Ministry(models.Model):
@@ -11,22 +11,26 @@ class Ministry(models.Model):
     description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
     cover_image_path = models.ImageField(
         "Cover image",
+        validators=[ministry_cover_image_restriction],
         upload_to=ministries_upload_image_path,
     )
     gallery_image_path_1 = models.ImageField(
         "Gallery image 1",
+        validators=[ministry_gallery_image_restriction],
         upload_to=ministries_upload_image_path,
         null=True,
         blank=True,
     ) 
     gallery_image_path_2 = models.ImageField(
         "Gallery image 2",
+        validators=[ministry_gallery_image_restriction],
         upload_to=ministries_upload_image_path,
         null=True,
         blank=True,
     )
     gallery_image_path_3 = models.ImageField(
         "Gallery image 3",
+        validators=[ministry_gallery_image_restriction],
         upload_to=ministries_upload_image_path,
         null=True,
         blank=True,

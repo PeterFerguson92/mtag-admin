@@ -1,8 +1,8 @@
 from rest_framework import status, generics
 from rest_framework.response import Response
 
-from .serializers import AboutUsSerializer, HomepageSerializer, LeaderSerializer
-from .models import AboutUs, Homepage, Leader
+from .serializers import AboutUsSerializer, HomepageSerializer, LeaderSerializer, LeadershipBoardSerializer
+from .models import AboutUs, Homepage, Leader, LeadershipBoard
 
 class HomepageView(generics.GenericAPIView):
     serializer_class = HomepageSerializer
@@ -26,6 +26,19 @@ class AboutUsDetailView(generics.GenericAPIView):
         if not objects:
             return Response(
                 {"status": "No about us data available"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = self.serializer_class(objects, many=True)
+        return Response({"status": "success", "result": serializer.data})
+    
+class LeadershipBoardView(generics.GenericAPIView):
+    serializer_class = LeadershipBoardSerializer
+
+    def get(self, request):
+        objects = LeadershipBoard.objects.all()
+        if not objects:
+            return Response(
+                {"status": "No Leadership Board data available"},
                 status=status.HTTP_404_NOT_FOUND,
             )
         serializer = self.serializer_class(objects, many=True)

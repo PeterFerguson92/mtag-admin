@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from homepage.uploadfiles import homepage_banner_upload_image_path, homepage_leader_cover_upload_image_path, homepage_video_cover_upload_image_path
+from homepage.uploadfiles import homepage_about_us_cover_upload_image_path, homepage_banner_upload_image_path, homepage_leader_cover_upload_image_path, homepage_video_cover_upload_image_path
 
 # Create your models here.
 POSITIONS = (
@@ -82,6 +82,32 @@ class AboutUs(models.Model):
     section_display_info_1_text = models.TextField("Section Display Info 1 Text", max_length=180, blank=True, null=True)
     section_display_info_2 = models.CharField("Section Display Info 2 Title", max_length=80, blank=True, null=True)
     section_display_info_2_text = models.TextField("Section Display Info 2 Text", max_length=180, blank=True, null=True)
+    
+    image_1 = models.ImageField(
+        "Image 1",
+        upload_to=homepage_about_us_cover_upload_image_path,
+        null=True,
+        blank=True,
+    )
+    image_2 = models.ImageField(
+        "Image 2",
+        upload_to=homepage_about_us_cover_upload_image_path,
+        null=True,
+        blank=True,
+    )
+    image_3 = models.ImageField(
+        "Image 3",
+        upload_to=homepage_about_us_cover_upload_image_path,
+        null=True,
+        blank=True,
+    )
+    image_4 = models.ImageField(
+        "Image 4",
+        upload_to=homepage_about_us_cover_upload_image_path,
+        null=True,
+        blank=True,
+    )
+    
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

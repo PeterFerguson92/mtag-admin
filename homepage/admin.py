@@ -38,7 +38,7 @@ class BlockAdmin(admin.ModelAdmin):
 
 
 @admin.register(AboutUs)
-class BlockAdmin(admin.ModelAdmin):
+class AboutUsAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
     fields = (
         "homepage_display_header",
@@ -55,6 +55,10 @@ class BlockAdmin(admin.ModelAdmin):
         "section_display_info_1_text",
         "section_display_info_2",
         "section_display_info_2_text",
+        "image_1",
+        "image_2",
+        "image_3",
+        "image_4",
     )
     list_display = (
         "title",

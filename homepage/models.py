@@ -213,7 +213,6 @@ class Leader(models.Model):
     address = models.CharField("Address", max_length=200, blank=True, null=True)
     image = models.ImageField(
         "Image",
-        validators=[leader_image_restriction],
         upload_to=homepage_leader_cover_upload_image_path,
         null=True,
         blank=True,

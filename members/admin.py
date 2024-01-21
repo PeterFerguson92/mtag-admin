@@ -4,7 +4,7 @@ from .models import Member
 
 
 @admin.register(Member)
-class PersonAdmin(admin.ModelAdmin):
+class MemberAdmin(admin.ModelAdmin):
     search_fields = ("name__startswith",)
     fields = (
         "name",
@@ -19,10 +19,15 @@ class PersonAdmin(admin.ModelAdmin):
         "department",
         "member_type",
         "membership_start",
+        "origin",
     )
-    list_display = ("name", "middle_name","surname", "member_type")
+    list_display = ("name", "middle_name", "surname", "member_type", "origin",)
     list_filter = (
         "name",
         "surname",
+        "department",
+        "member_type",
+        "membership_start",
+        "origin",
         "created_at",
     )

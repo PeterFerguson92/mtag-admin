@@ -18,6 +18,12 @@ SEX_CHOICES = (
         ('Male', 'Male',),
     )
 
+ORIGIN = (
+        ('WEBSITE', 'Website',),
+        ('IMPORT', 'Import',),
+        ('MANUAL', 'Manual',),
+    )
+
 # Create your models here.
 class Member(models.Model):
     name = models.CharField("Name", max_length=255,blank=False )
@@ -31,6 +37,7 @@ class Member(models.Model):
     sex = models.CharField(max_length=50,choices=SEX_CHOICES)
     department = models.CharField("Department",max_length=255,choices=DEPARTMENTS, blank=True, null=True)
     member_type = models.CharField("Member type",max_length=255,choices=MEMBER_TYPE, default='Full Member')
+    origin = models.CharField("Origin",max_length=255,choices=ORIGIN, default='Manual')
     membership_start = models.DateField("Membership start", max_length=255, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 

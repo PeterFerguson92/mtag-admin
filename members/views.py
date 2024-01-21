@@ -12,7 +12,8 @@ class MemberView(generics.GenericAPIView):
             'surname': request.data.get('surname'), 
             'telephone': request.data.get('phone'), 
             'sex': request.data.get('sex'), 
-            'member_type': request.data.get('memberType') 
+            'member_type': request.data.get('memberType'), 
+            'origin': request.data.get('origin') 
         }
         serializer = MemberSerializer(data=data)
         if serializer.is_valid():

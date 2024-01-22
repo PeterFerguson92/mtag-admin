@@ -56,7 +56,7 @@ class TransactionAdmin(admin.ModelAdmin):
     )
     list_display = ("type", "member_name", "date", "month")
     list_filter = ("type", "date", "member", "month")
-    actions = ["export_to_csv", "export_to_xls"]
+    actions = ["export_to_csv",]
 
     def member_name(
         self, instance
@@ -106,44 +106,3 @@ class TransactionAdmin(admin.ModelAdmin):
         return response
 
     export_to_csv.short_description = "Export to CSV"  # short description
-
-    @admin.action(description="Mark selected stories as published")
-    def export_to_xls(modeladmin, request, queryset):
-        print(queryset)
-        total_amount = decimal.Decimal(0.00)
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment;" "filename={}.csv".format(
-            "transaction_outline"
-        )
-        writer = csv.writer(response)
-        writer.writerow(
-            [
-                "Full Name",
-                "Type",
-                "Service type",
-                "Month",
-                "Date",
-                "Amount",
-            ]
-        )
-        for s in queryset:
-            total_amount = total_amount + s.amount
-            writer.writerow(
-                [
-                    f"{s.member.name} {s.member.middle_name} {s.member.surname}",
-                    s.type,
-                    s.service_type,
-                    s.month,
-                    s.date.strftime("%d/%m/%Y"),
-                    s.amount,
-                ]
-            )
-
-        writer.writerow(
-            [
-                "Total Amount","","","","",total_amount,
-            ]
-        )
-        return response
-
-    export_to_xls.short_description = "Export to XLS"  # short description

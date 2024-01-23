@@ -16,6 +16,7 @@ class MemberAdmin(admin.ModelAdmin):
         "surname",
         "telephone",
         "postcode",
+        "house_number",
         "address",
         "date_of_birth",
         "age",
@@ -35,6 +36,9 @@ class MemberAdmin(admin.ModelAdmin):
     list_filter = (
         "name",
         "surname",
+        "postcode",
+        "house_number",
+        "sex",
         "department",
         "member_type",
         "membership_start",
@@ -72,7 +76,11 @@ class TransactionAdmin(admin.ModelAdmin):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet('Transactions')
-        bold = workbook.add_format({'bold': True})
+      
+        bold = workbook.add_format({"bold": True})
+        bold.set_align('center')
+        normal_format = workbook.add_format()
+        normal_format.set_align('center')
         total_amount = decimal.Decimal(0.00)
 
         # Write the title for every column in bold
@@ -90,12 +98,12 @@ class TransactionAdmin(admin.ModelAdmin):
         # Iterate over the data and write it out row by row.
         for s in queryset:
             total_amount = total_amount + s.amount
-            worksheet.write(row, col, f"{s.member.name} {s.member.middle_name} {s.member.surname}")
-            worksheet.write(row, col + 1,  s.type)
-            worksheet.write(row, col + 2, s.service_type)
-            worksheet.write(row, col + 3, s.month)
-            worksheet.write(row, col + 4, s.date.strftime("%d/%m/%Y"))
-            worksheet.write(row, col + 5, s.amount)
+            worksheet.write(row, col, f"{s.member.name} {s.member.middle_name} {s.member.surname}", normal_format)
+            worksheet.write(row, col + 1,  s.type, normal_format)
+            worksheet.write(row, col + 2, s.service_type, normal_format)
+            worksheet.write(row, col + 3, s.month, normal_format)
+            worksheet.write(row, col + 4, s.date.strftime("%d/%m/%Y"), normal_format)
+            worksheet.write(row, col + 5, s.amount, normal_format)
             row += 1
 
         worksheet.write(row+1, 0, 'Total Amount', bold)

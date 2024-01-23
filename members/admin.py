@@ -1,11 +1,11 @@
+import io
 import decimal
+import xlsxwriter
+from datetime import date
 from django.contrib import admin
-
+from django.http import HttpResponse
 from .models import Member, Transaction
 from django.core.exceptions import ObjectDoesNotExist
-import csv
-from django.http import HttpResponse
-
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
@@ -56,7 +56,7 @@ class TransactionAdmin(admin.ModelAdmin):
     )
     list_display = ("type", "member_name", "date", "month")
     list_filter = ("type", "date", "member", "month")
-    actions = ["export_to_csv",]
+    actions = ["export_to_xls"]
 
     def member_name(
         self, instance
@@ -66,43 +66,49 @@ class TransactionAdmin(admin.ModelAdmin):
         except ObjectDoesNotExist:
             return "ERROR!!"
 
-    @admin.action(description="Mark selected stories as published")
-    def export_to_csv(modeladmin, request, queryset):
-        print(queryset)
+    @admin.action()
+    def export_to_xls(self, request, queryset):
+         # Create a workbook and add a worksheet.
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet('Transactions')
+        bold = workbook.add_format({'bold': True})
         total_amount = decimal.Decimal(0.00)
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment;" "filename={}.csv".format(
-            "transaction_outline"
-        )
-        writer = csv.writer(response)
-        writer.writerow(
-            [
-                "Full Name",
-                "Type",
-                "Service type",
-                "Month",
-                "Date",
-                "Amount",
-            ]
-        )
+
+        # Write the title for every column in bold
+        worksheet.write('A1', 'Full Name', bold)
+        worksheet.write('B1', 'Type', bold)
+        worksheet.write('C1', 'Service type', bold)
+        worksheet.write('D1', 'Month', bold)
+        worksheet.write('E1', 'Date', bold)
+        worksheet.write('F1', 'Amount', bold)
+        
+        # Start from the first cell. Rows and columns are zero indexed.
+        row = 1
+        col = 0
+
+        # Iterate over the data and write it out row by row.
         for s in queryset:
             total_amount = total_amount + s.amount
-            writer.writerow(
-                [
-                    f"{s.member.name} {s.member.middle_name} {s.member.surname}",
-                    s.type,
-                    s.service_type,
-                    s.month,
-                    s.date.strftime("%d/%m/%Y"),
-                    s.amount,
-                ]
-            )
+            worksheet.write(row, col, f"{s.member.name} {s.member.middle_name} {s.member.surname}")
+            worksheet.write(row, col + 1,  s.type)
+            worksheet.write(row, col + 2, s.service_type)
+            worksheet.write(row, col + 3, s.month)
+            worksheet.write(row, col + 4, s.date.strftime("%d/%m/%Y"))
+            worksheet.write(row, col + 5, s.amount)
+            row += 1
 
-        writer.writerow(
-            [
-                "Total Amount","","","","",total_amount,
-            ]
-        )
+        worksheet.write(row+1, 0, 'Total Amount', bold)
+        worksheet.write(row+1, col + 5, total_amount, bold)
+        worksheet.autofit()
+        workbook.close()
+
+        output.seek(0)
+        today = date.today()
+        response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response["Content-Disposition"] = "attachment;" "filename={}.xlsx".format(
+        'transactions_outline_' + today.strftime('%d/%m/%Y'))
+        
         return response
 
-    export_to_csv.short_description = "Export to CSV"  # short description
+    export_to_xls.short_description = "Export to XLS"  # short description

@@ -111,11 +111,10 @@ class TransactionAdmin(admin.ModelAdmin):
         worksheet.write('C1', 'House Number', bold)
         worksheet.write('D1', 'Source', bold)
         worksheet.write('E1', 'Type', bold)
-        worksheet.write('F1', 'Source', bold)
-        worksheet.write('G1', 'Service type', bold)
-        worksheet.write('H1', 'Month', bold)
-        worksheet.write('I1', 'Date', bold)
-        worksheet.write('J1', 'Amount', bold)
+        worksheet.write('F1', 'Service type', bold)
+        worksheet.write('G1', 'Month', bold)
+        worksheet.write('H1', 'Date', bold)
+        worksheet.write('I1', 'Amount', bold)
         
         # Start from the first cell. Rows and columns are zero indexed.
         row = 1

@@ -21,6 +21,12 @@ SEX_CHOICES = (
         ('Male', 'Male',),
     )
 
+SOURCE = (
+        ('WEBSITE', 'Website',),
+        ('BANK TRANSFER', 'Bank Transfer',),
+        ('MANUAL', 'Manual',),
+    )
+
 ORIGIN = (
         ('WEBSITE', 'Website',),
         ('IMPORT', 'Import',),
@@ -79,7 +85,7 @@ class Transaction(models.Model):
     service_type = models.CharField("Service Type",max_length=255,choices=SERVICE_TYPE, blank=True, null=True)
     date = models.DateField("Date",max_length=255)
     month = models.CharField("Month", max_length=255, choices=MONTH, blank=False, null=False)
-    origin = models.CharField("Origin",max_length=255,choices=MEMBER_TYPE, default='Full Member',)
+    source = models.CharField("Source",max_length=255,choices=SOURCE, default='Manual',  blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

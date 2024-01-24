@@ -56,18 +56,18 @@ class MemberAdmin(admin.ModelAdmin):
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    search_fields = ("member__name","member__surname","member__postcode")
+    search_fields = ("member__name","member__surname","member__postcode", "source")
     fields = (
         "amount",
         "type",
         "member",
-        "origin",
+        "source",
         "date",
         "month",
         "service_type",
     )
-    list_display = ("type", "member_name", "member_postcode_address","date", "month")
-    list_filter = ("type", "date", "member", "origin", "month",)
+    list_display = ("type", "member_name", "member_postcode_address","date", "month", "source")
+    list_filter = ("type", "date", "member", "source", "month",)
     autocomplete_fields = ['member']
 
     actions = ["export_to_xls"]
@@ -106,14 +106,16 @@ class TransactionAdmin(admin.ModelAdmin):
 
         # Write the title for every column in bold
         worksheet.write('A1', 'Full Name', bold)
-        worksheet.write('B1', 'Member Type', bold)
-        worksheet.write('C1', 'Postcode', bold)
-        worksheet.write('D1', 'House Number', bold)
+        # worksheet.write('B1', 'Member Type', bold)
+        worksheet.write('B1', 'Postcode', bold)
+        worksheet.write('C1', 'House Number', bold)
+        worksheet.write('D1', 'Source', bold)
         worksheet.write('E1', 'Type', bold)
-        worksheet.write('F1', 'Service type', bold)
-        worksheet.write('G1', 'Month', bold)
-        worksheet.write('H1', 'Date', bold)
-        worksheet.write('I1', 'Amount', bold)
+        worksheet.write('F1', 'Source', bold)
+        worksheet.write('G1', 'Service type', bold)
+        worksheet.write('H1', 'Month', bold)
+        worksheet.write('I1', 'Date', bold)
+        worksheet.write('J1', 'Amount', bold)
         
         # Start from the first cell. Rows and columns are zero indexed.
         row = 1
@@ -123,15 +125,15 @@ class TransactionAdmin(admin.ModelAdmin):
         for s in queryset:
             total_amount = total_amount + s.amount
             worksheet.write(row, col, f"{s.member.name} {s.member.middle_name} {s.member.surname}", normal_format)
-            worksheet.write(row, col + 1, s.origin, normal_format)
             if s.member.postcode :
-                worksheet.write(row, col + 2, f"{s.member.postcode}", normal_format)
+                worksheet.write(row, col + 1, f"{s.member.postcode}", normal_format)
+            else:
+                worksheet.write(row, col + 1, "")
+            if s.member.house_number:
+                worksheet.write(row, col + 2, f"{s.member.house_number}", normal_format)
             else:
                 worksheet.write(row, col + 2, "")
-            if s.member.house_number:
-                worksheet.write(row, col + 3, f"{s.member.house_number}", normal_format)
-            else:
-                worksheet.write(row, col + 3, "")
+            worksheet.write(row, col + 3, s.source, normal_format)
             worksheet.write(row, col + 4, s.type, normal_format)
             worksheet.write(row, col + 5, s.service_type, normal_format)
             worksheet.write(row, col + 6, s.month, normal_format)

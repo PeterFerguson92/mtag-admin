@@ -60,6 +60,7 @@ class TransactionAdmin(admin.ModelAdmin):
     fields = (
         "amount",
         "type",
+        "message",
         "member",
         "source",
         "date",

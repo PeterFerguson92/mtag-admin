@@ -36,6 +36,7 @@ class TransactionView(generics.GenericAPIView):
             'type': request.data.get('type'), 
             'member': member.id, 
             'source': request.data.get('source'), 
+            'message': request.data.get('message'), 
             'date': currentDate, 
             'month': currentMonth, 
         }

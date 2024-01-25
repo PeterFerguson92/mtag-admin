@@ -52,7 +52,7 @@ class Member(models.Model):
     surname = models.CharField("Surname", max_length=255,blank=False)
     telephone = models.CharField("Telephone", max_length=255, blank=True, null=True)
     postcode = models.CharField("Postcode",max_length=255, blank=True, null=True)
-    house_number = models.IntegerField("House Number", blank=True, null=True)
+    house_number = models.CharField("House Number", blank=True, null=True, max_length=20)
     address = models.CharField("Address",max_length=255, blank=True, null=True)
     date_of_birth = models.CharField("Date Of Birth",max_length=255, blank=True, null=True)
     age = models.IntegerField("Age", blank=True, null=True)

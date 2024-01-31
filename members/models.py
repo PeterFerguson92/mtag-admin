@@ -64,7 +64,7 @@ class Member(models.Model):
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:
-        ordering = ("name", "created_at")
+        ordering = ("name","surname","member_type","postcode", "origin", "created_at")
         verbose_name_plural = "Members"
 
     def __unicode__(self):

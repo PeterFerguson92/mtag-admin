@@ -4,7 +4,8 @@ import xlsxwriter
 from datetime import date
 from django.contrib import admin
 from django.http import HttpResponse
-from .models import Member, Transaction
+from .models import SOURCE, Member, Transaction
+from daterange.filters import DateRangeFilter
 from django.core.exceptions import ObjectDoesNotExist
 
 @admin.register(Member)
@@ -34,6 +35,7 @@ class MemberAdmin(admin.ModelAdmin):
         "postcode",
         "house_number",
         "origin",
+        "created_at",
     )
     list_filter = (
         "name",
@@ -68,11 +70,20 @@ class TransactionAdmin(admin.ModelAdmin):
         "service_type",
     )
     list_display = ("type", "member_name", "member_postcode_address","date", "month", "source")
-    list_filter = ("type", "date", "member", "source", "month",)
+    list_filter = ("type", "date", "member", "source", "month", ("date", DateRangeFilter))
     autocomplete_fields = ['member']
-
+    change_list_template = "admin/daterange/change_list.html"
     actions = ["export_to_xls"]
+    
+    class Media:
+        css = {"all": ("admin/css/forms.css", "css/admin/daterange.css")}
+        js = ("admin/js/calendar.js", "js/admin/DateRangeShortcuts.js")
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj and obj.source == 'WEBSITE':
+            return ["message"]
+        return []
+    
     def member_name(
         self, instance
     ):  # name of the method should be same as the field given in `list_display`

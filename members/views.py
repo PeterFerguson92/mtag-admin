@@ -72,7 +72,8 @@ class TransactionView(generics.GenericAPIView):
         members = Member.objects.filter(name=request_name).filter(surname=request_surname).filter(postcode=request_postcode).filter(house_number=request_house_number)
         data = None
         if members.count() == 0:
-            transaction_member = Member.objects.create(name=request_name, surname=request_surname, postcode=request_postcode, house_number=request_house_number )
+            transaction_member = Member.objects.create(name=request_name, surname=request_surname, postcode=request_postcode, 
+                                                       house_number=request_house_number, origin='WEBSITE' )
             data = self.buildData(request, transaction_member)
         else: 
             data = self.buildData(request, members[0])

@@ -40,8 +40,8 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
-    'admin_interface',
-    'colorfield',
+    "admin_interface",
+    "colorfield",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "whitenoise.runserver_nostatic",
+    "daterange.apps.DateRangeFilterConfig",
     "rest_framework",
     "corsheaders",
     "members",
@@ -190,12 +191,12 @@ SECURE_HSTS_SECONDS = 0
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DATE_FORMAT = ( ( 'd-m-Y' ))
-DATE_INPUT_FORMATS = ( ('%d-%m-%Y'),)
+DATE_FORMAT = "d-m-Y"
+DATE_INPUT_FORMATS = (("%d-%m-%Y"),)
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Europe/Belfast'
+TIME_ZONE = "Europe/Belfast"
 
 USE_I18N = True
 
@@ -203,9 +204,9 @@ USE_L10N = False
 
 USE_TZ = False
 
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
-XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+XS_SHARING_ALLOWED_METHODS = ["POST", "GET", "OPTIONS", "PUT", "DELETE"]
 
-STRIPE_SECRET_KEY=env("STRIPE_SECRET_KEY")
-STRIPE_PUBLISHABLE_KEY=env("STRIPE_PUBLISHABLE_KEY")
+STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY")

@@ -8,6 +8,7 @@ django-admin==2.0.2
 django-admin-interface==0.28.3
 django-colorfield==0.11.0
 django-cors-headers==4.0.0
+django-daterange-filterspec==2.0.5
 django-environ==0.10.0
 django-excel-response2==3.0.6
 django-phonenumber-field==7.2.0

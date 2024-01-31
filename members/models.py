@@ -98,5 +98,26 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.type} - {self.member.name} {self.member.surname}"
+
+class BankAccount(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField("Name", max_length=255,blank=False )
+    account_holder_name = models.CharField("Account Holder Name", max_length=255,blank=False )
+    account_number = models.CharField("Account Number", max_length=255,blank=False )
+    sort_code = models.CharField("Sort code", max_length=255,blank=False )
+    iban = models.CharField("IBAN", max_length=255,blank=True )
+    swift_bic = models.CharField("SWIFT BIC", max_length=255,blank=True )  
+    visible = models.BooleanField("Visible", default=False )       
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+    class Meta:
+        ordering = ("name", "account_holder_name","created_at")
+        verbose_name_plural = "Bank Account Details"
+
+    def __unicode__(self):
+        return "%s: /n %s  %s" % (self.name, self.created_at)
+
+    def __str__(self):
+        return f"{self.name} - {self.account_holder_name}"
     
     

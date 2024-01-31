@@ -1,11 +1,11 @@
 from datetime import date, datetime
 from activities.models import MONTH
-from members.models import Member, Transaction
+from members.models import BankAccount, Member
 from mtag_admin.settings import STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY
 from rest_framework import status, generics
 from rest_framework.response import Response
 import stripe
-from .serializers import MemberSerializer, TransactionSerializer
+from .serializers import BankAccountSerializer, MemberSerializer, TransactionSerializer
 
 stripe.api_key=STRIPE_SECRET_KEY
 
@@ -19,7 +19,20 @@ class StripeKeyView(generics.GenericAPIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
         return Response({"status": "success", 'key': STRIPE_PUBLISHABLE_KEY}, status=200)
+    
+class BankAccountView(generics.GenericAPIView):
+    serializer_class = BankAccountSerializer
 
+    def get(self, request):
+        accounts = BankAccount.objects.filter(visible=True)
+        if not accounts:
+            return Response(
+                {"status": "No accounts available"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = self.serializer_class(accounts, many=True)
+        return Response({"status": "success", "result": serializer.data})
+    
 class MemberView(generics.GenericAPIView):
      def post(self, request, *args, **kwargs):
 

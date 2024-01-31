@@ -4,7 +4,7 @@ import xlsxwriter
 from datetime import date
 from django.contrib import admin
 from django.http import HttpResponse
-from .models import SOURCE, Member, Transaction
+from .models import SOURCE, BankAccount, Member, Transaction
 from daterange.filters import DateRangeFilter
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -166,3 +166,21 @@ class TransactionAdmin(admin.ModelAdmin):
         return response
 
     export_to_xls.short_description = "Export to XLS"  # short description
+    
+@admin.register(BankAccount)
+class BankAccountAdmin(admin.ModelAdmin):
+    search_fields = ("name__startswith",)
+    fields = (
+        "name",
+        "account_holder_name",
+        "account_number",
+        "sort_code",
+        "iban",
+        "swift_bic",
+        "visible",
+    )
+    list_display = (
+        "name",
+        "account_holder_name",
+        "visible",
+    )

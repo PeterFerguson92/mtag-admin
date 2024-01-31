@@ -1,10 +1,24 @@
 from datetime import date, datetime
 from activities.models import MONTH
 from members.models import Member, Transaction
+from mtag_admin.settings import STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY
 from rest_framework import status, generics
 from rest_framework.response import Response
-
+import stripe
 from .serializers import MemberSerializer, TransactionSerializer
+
+stripe.api_key=STRIPE_SECRET_KEY
+
+class StripeKeyView(generics.GenericAPIView):
+    
+    def get(self, request):
+        stripe_api_key = STRIPE_PUBLISHABLE_KEY
+        if not stripe_api_key:
+            return Response(
+                {"status": "No stripe key found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        return Response({"status": "success", 'key': STRIPE_PUBLISHABLE_KEY}, status=200)
 
 class MemberView(generics.GenericAPIView):
      def post(self, request, *args, **kwargs):
@@ -67,4 +81,20 @@ class TransactionView(generics.GenericAPIView):
         
     
     
-    
+class CreatePaymentIntent(generics.GenericAPIView):
+     def post(self, request,*args, **kwargs):
+        try:
+            intent=stripe.PaymentIntent.create(
+               amount=int(request.data.get('amount')) * 100,
+               currency='usd',
+               automatic_payment_methods={
+                'enabled': True,
+                },
+                metadata={
+                    'transaction_type':request.data.get('type')
+                } 
+            )
+            return Response({'client_secret':intent['client_secret'], 'key': STRIPE_PUBLISHABLE_KEY}, status=200)
+        
+        except Exception as e:
+            return Response({'error':str(e)}, status=400)

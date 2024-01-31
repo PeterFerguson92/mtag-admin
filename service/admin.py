@@ -162,4 +162,5 @@ class EventAdmin(admin.ModelAdmin):
         "service_type",
         "created_at",
     )
+    list_filter = ("date", "service_type",)
     actions = [export_to_xls]

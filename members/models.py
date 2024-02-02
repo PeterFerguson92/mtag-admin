@@ -54,7 +54,7 @@ class Member(models.Model):
     postcode = models.CharField("Postcode",max_length=255, blank=True, null=True)
     house_number = models.CharField("House Number", blank=True, null=True, max_length=20)
     address = models.CharField("Address",max_length=255, blank=True, null=True)
-    date_of_birth = models.CharField("Date Of Birth",max_length=255, blank=True, null=True)
+    date_of_birth = models.DateField("Date Of Birth", blank=True, null=True)
     age = models.IntegerField("Age", blank=True, null=True)
     sex = models.CharField(max_length=50,choices=SEX_CHOICES, blank=True, null=True)
     department = models.CharField("Department",max_length=255,choices=DEPARTMENTS, blank=True, null=True)

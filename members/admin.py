@@ -8,9 +8,16 @@ from daterange.filters import DateRangeFilter
 from .models import SOURCE, BankAccount, Member, Transaction
 from django.core.exceptions import ObjectDoesNotExist
 from .service import export_member_attendace
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
+class MemberResource(resources.ModelResource):
+
+    class Meta:
+        model = Member
+        
 @admin.register(Member)
-class MemberAdmin(admin.ModelAdmin):
+class MemberAdmin(ImportExportModelAdmin ):
     search_fields = ("name","surname", "postcode")
     fields = (
         "name",
@@ -52,6 +59,7 @@ class MemberAdmin(admin.ModelAdmin):
     )
     search_fields = ['name']
     actions = ["export_attendace_to_xls"]
+    resource_classes = [MemberResource]
     def get_search_results(self, request, queryset, search_term):
         print("In get search results")
         results = super().get_search_results(request, queryset, search_term)
@@ -63,7 +71,7 @@ class MemberAdmin(admin.ModelAdmin):
         return response
 
     export_attendace_to_xls.short_description = "Export Attendance to XLS"  # short description
-
+    
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):

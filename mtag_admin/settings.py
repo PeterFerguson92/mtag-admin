@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "daterange.apps.DateRangeFilterConfig",
     "rest_framework",
     "corsheaders",
+    "import_export",
     "members",
     "activities",
     "service",

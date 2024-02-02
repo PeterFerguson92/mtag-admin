@@ -5,7 +5,7 @@ from activities.models import MONTH
 
 DEPARTMENTS = (
     ("MEN", "Men's Ministry"),
-    ("WOMEN", "Children's Ministry"),
+    ("WOMEN", "Women Ministry"),
     ("YOUTH", "Youth Ministry"),
     ("CHILDREN", "Children Ministry"),
 

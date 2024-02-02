@@ -4,9 +4,10 @@ import xlsxwriter
 from datetime import date
 from django.contrib import admin
 from django.http import HttpResponse
-from .models import SOURCE, BankAccount, Member, Transaction
 from daterange.filters import DateRangeFilter
+from .models import SOURCE, BankAccount, Member, Transaction
 from django.core.exceptions import ObjectDoesNotExist
+from .service import export_member_attendace
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
@@ -31,7 +32,7 @@ class MemberAdmin(admin.ModelAdmin):
         "name",
         "middle_name",
         "surname",
-        "member_type",
+        "department",
         "postcode",
         "house_number",
         "origin",
@@ -50,10 +51,18 @@ class MemberAdmin(admin.ModelAdmin):
         "created_at",
     )
     search_fields = ['name']
+    actions = ["export_attendace_to_xls"]
     def get_search_results(self, request, queryset, search_term):
         print("In get search results")
         results = super().get_search_results(request, queryset, search_term)
         return results
+    
+    @admin.action()
+    def export_attendace_to_xls(self, request, queryset):
+        response = export_member_attendace()
+        return response
+
+    export_attendace_to_xls.short_description = "Export Attendance to XLS"  # short description
 
 
 @admin.register(Transaction)
@@ -166,6 +175,7 @@ class TransactionAdmin(admin.ModelAdmin):
         return response
 
     export_to_xls.short_description = "Export to XLS"  # short description
+    
     
 @admin.register(BankAccount)
 class BankAccountAdmin(admin.ModelAdmin):

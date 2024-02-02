@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "daterange.apps.DateRangeFilterConfig",
     "rest_framework",
+    "reset_migrations",
     "corsheaders",
     "import_export",
     "members",

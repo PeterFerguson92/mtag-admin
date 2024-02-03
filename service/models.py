@@ -1,6 +1,8 @@
 from django.db import models
 import uuid
 
+from members.models import SERVICE_TYPE
+
 SERVICES = (
     ("01-SERVICE", "1st Service"),
     ("02-SERVICE", "2nd Service"),
@@ -73,3 +75,25 @@ class ServicePlanning(models.Model):
 
     def __str__(self):
         return f"{self.title} {self.service_type} {self.date}"
+    
+    
+class Attendance(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    date = models.DateField("Date")
+    number_of_mens = models.IntegerField("Number of Men's", blank=True, null=True)
+    number_of_women = models.IntegerField("Number of Women's", blank=True, null=True)
+    number_of_youth = models.IntegerField("Number of Youth's", blank=True, null=True)
+    number_of_children = models.IntegerField("Number of Children's", blank=True, null=True)
+    total = models.IntegerField("Total", blank=True, null=True)
+    service_type = models.CharField("Service Type",max_length=255,choices=SERVICE_TYPE, blank=True, null=True)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+    class Meta:
+        ordering = ("date", "created_at")
+        verbose_name_plural = "Attendance"
+
+    def __unicode__(self):
+        return "%s: /n %s  %s" % (self.date, self.created_at)
+
+    def __str__(self):
+        return f"{self.date}"

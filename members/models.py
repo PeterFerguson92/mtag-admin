@@ -40,6 +40,7 @@ TRANSACTION_TYPE = (
     )
 
 SERVICE_TYPE = (
+        ('TUESDAY BIBLE STUDIES', 'Tuesday Bible studies',),
         ('FRIDAY_PRAYER_MEETING', 'Friday Prayer Meeting',),
         ('1_SUNDAY_SERVICE', 'Sunday 1st Service',),
         ('2_SUNDAY_SERVICE', 'Sunday 2nd Service'),
@@ -121,3 +122,5 @@ class BankAccount(models.Model):
         return f"{self.name} - {self.account_holder_name}"
     
     
+    
+    # https://www.youtube.com/watch?v=BLxCnD5-Uvc

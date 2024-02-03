@@ -2,7 +2,7 @@ import io
 import xlsxwriter
 from datetime import date
 from django.contrib import admin
-from .models import ServicePlanning
+from .models import Attendance, ServicePlanning
 from django.http import HttpResponse
 
 # Register your models here.
@@ -164,3 +164,23 @@ class EventAdmin(admin.ModelAdmin):
     )
     list_filter = ("date", "service_type",)
     actions = [export_to_xls]
+
+
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    # search_fields = ("title__startswith",)
+    fields = (
+        "date",
+        "number_of_mens",
+        "number_of_women",
+        "number_of_youth",
+        "number_of_children",
+        "total",
+        "service_type",
+    )
+    list_display = (
+        "date",
+        "service_type",
+        "created_at",
+    )
+    list_filter = ("date", "service_type",)

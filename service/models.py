@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 
-from members.models import SERVICE_TYPE
+from members.models import SERVICE_TYPE, Member
 
 SERVICES = (
     ("01-SERVICE", "1st Service"),
@@ -97,3 +97,24 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.date}"
+    
+# class MemberAbsence(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     date = models.DateField("Date")
+#     reason = models.TextField("Reason", max_length=1024, blank=True, null=True)0
+#     member = models.ForeignKey(
+#         Member,
+#         on_delete=models.CASCADE,
+#         related_name='members'
+#     )
+#     created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+#     class Meta:
+#         ordering = ("date", "created_at")
+#         verbose_name_plural = "Member Absence"
+
+#     def __unicode__(self):
+#         return "%s: /n %s  %s" % (self.date, self.created_at)
+
+#     def __str__(self):
+#         return f"{self.date}"

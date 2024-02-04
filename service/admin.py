@@ -4,7 +4,9 @@ from datetime import date
 from django.contrib import admin
 from .models import Attendance, ServicePlanning
 from django.http import HttpResponse
+from django.urls import path
 
+from .processor import process_attendance_import
 # Register your models here.
 
 
@@ -165,6 +167,8 @@ class EventAdmin(admin.ModelAdmin):
     list_filter = ("date", "service_type",)
     actions = [export_to_xls]
 
+# class CsvImportForm(forms.Form):
+#     csv_upload = forms.FileField()
 
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
@@ -184,3 +188,33 @@ class AttendanceAdmin(admin.ModelAdmin):
         "created_at",
     )
     list_filter = ("date", "service_type",)
+    
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [path('upload-csv/', self.upload_csv),]
+        return new_urls + urls
+    
+    def upload_csv(self, request):
+        return process_attendance_import(self, request)  
+        # if request.method == "POST":
+        #     csv_file = request.FILES["csv_upload"]
+            
+        #     if not csv_file.name.endswith('.csv'):
+        #         messages.warning(request, 'The wrong file type was uploaded')
+        #         return HttpResponseRedirect(request.path_info)
+            
+        #     file_data = csv_file.read().decode("utf-8")
+        #     csv_data = file_data.split("\n")
+
+        #     for x in csv_data:
+        #         fields = x.split(",")
+        #         # created = customer.objects.update_or_create(
+        #         #     name = fields[0],
+        #         #     balance = fields[1],
+        #         #     )
+        #     url = reverse('admin:index')
+        #     return HttpResponseRedirect(url)
+
+        # form = CsvImportForm()
+        # data = {"form": form}
+        # return render(request, "admin/csv_upload.html", data)

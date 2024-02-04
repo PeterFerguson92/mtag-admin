@@ -20,10 +20,10 @@ def export_member_attendace():
     women_members = get_members_by_department("WOMEN")
     youth_members = get_members_by_department("YOUTH")
     children_members = get_members_by_department("CHILDREN")
-    process_attendance_worksheet("MEN",workbook, mens_members, bold, normal_format)
-    process_attendance_worksheet("WOMEN",workbook, women_members, bold, normal_format)
-    process_attendance_worksheet("YOUTH",workbook, youth_members, bold, normal_format)
-    process_attendance_worksheet("CHILDREN",workbook, children_members, bold, normal_format)
+    build_attendance_worksheet("MEN",workbook, mens_members, bold, normal_format)
+    build_attendance_worksheet("WOMEN",workbook, women_members, bold, normal_format)
+    build_attendance_worksheet("YOUTH",workbook, youth_members, bold, normal_format)
+    build_attendance_worksheet("CHILDREN",workbook, children_members, bold, normal_format)
 
     workbook.close()
 
@@ -42,18 +42,21 @@ def export_member_attendace():
 def get_members_by_department(department):
     return Member.objects.filter(department=department)
 
-def process_attendance_worksheet(worksheet_name, workbook, members, bold, normal_format):
+def build_attendance_worksheet(worksheet_name, workbook, members, bold, normal_format):
+    today = date.today()
     worksheet_name = worksheet_name
     worksheet = workbook.add_worksheet(worksheet_name)
     worksheet.write("A1", "DATE", bold)
-    worksheet.write("A2", "FULL NAME", bold)
-    worksheet.write("B2", "ATTENDANCE", bold)
+    worksheet.write("A2", "MEMBER ID", bold)
+    worksheet.write("B2", "FULL NAME", bold)
+    worksheet.write("C2", "ATTENDANCE", bold)
     
     row = 2
     col = 0
     
     for s in members:
-        worksheet.write(row, col, f"{s.name} {s.middle_name} {s.surname}", normal_format)
+        worksheet.write(row, col, s.id, normal_format)
+        worksheet.write(row, col+1, f"{s.name} {s.middle_name} {s.surname}", normal_format)
         row += 1
     worksheet.autofit()
     

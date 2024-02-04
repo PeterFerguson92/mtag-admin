@@ -48,6 +48,7 @@ SERVICE_TYPE = (
 
 # Create your models here.
 class Member(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField("Name", max_length=255,blank=False )
     middle_name = models.CharField("Middle Name", max_length=255,blank=True)
     surname = models.CharField("Surname", max_length=255,blank=False)

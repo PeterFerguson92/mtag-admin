@@ -266,7 +266,7 @@ class Homepage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255, default="Homepage")
     banners = models.ManyToManyField(to=Banner)
-    blocks = models.ManyToManyField(to=Block)
+    blocks = models.OneToOneField(Block, on_delete=models.CASCADE, null=True) 
     aboutUs = models.OneToOneField(AboutUs, on_delete=models.CASCADE, null=True)
     details = models.OneToOneField(Details, on_delete=models.CASCADE, null=True)
     media = models.OneToOneField(Media, on_delete=models.CASCADE, null=True)

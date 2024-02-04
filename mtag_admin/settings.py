@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     "import_export",
     "activities",
     "ministries",
-    # "homepage",
+    "homepage",
     # "members",
 ]
 

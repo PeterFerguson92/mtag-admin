@@ -149,7 +149,7 @@ class LeadershipBoardAdmin(admin.ModelAdmin):
 @admin.register(Homepage)
 class HomepageAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
-    filter_horizontal = ("banners", "blocks")
+    filter_horizontal = ("banners",)
     fields = (
         "title",
         "banners",

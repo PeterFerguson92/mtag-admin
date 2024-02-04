@@ -54,11 +54,10 @@ INSTALLED_APPS = [
     "reset_migrations",
     "corsheaders",
     "import_export",
-    # "members",
-    # "activities",
-    # "service",
-    # "ministries",
+    "activities",
+    "ministries",
     # "homepage",
+    # "members",
 ]
 
 MIDDLEWARE = [

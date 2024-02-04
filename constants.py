@@ -40,3 +40,8 @@ SERVICE_TYPE = (
         ('1_SUNDAY_SERVICE', 'Sunday 1st Service',),
         ('2_SUNDAY_SERVICE', 'Sunday 2nd Service'),
     )
+
+SERVICES = (
+    ("01-SERVICE", "1st Service"),
+    ("02-SERVICE", "2nd Service"),
+)

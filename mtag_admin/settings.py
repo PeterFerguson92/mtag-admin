@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     "activities",
     "ministries",
     "homepage",
-    # "members",
+    "servicemanagement",
 ]
 
 MIDDLEWARE = [

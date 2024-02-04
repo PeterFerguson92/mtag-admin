@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "ministries",
     "homepage",
     "servicemanagement",
+    "finance"
 ]
 
 MIDDLEWARE = [

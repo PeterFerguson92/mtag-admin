@@ -1,35 +1,8 @@
 import uuid
 from django.db import models
+
+from constants import DAYS, MONTH
 from .uploadfiles import (event_image_restriction, event_upload_image_path)
-
-DAYS = (
-    ("01-MONDAY", "Monday"),
-    ("02-TUESDAY", "Tuesday"),
-    ("03-WEDNESDAY", "Wednesday"),
-    ("04-THURSDAY", "Thursday"),
-    ("05-FRIDAY", "Friday"),
-    ("06-SATURDAY", "Saturday"),
-    ("07-SUNDAY", "Sunday"),
-    ("08-SUNDAY", "Sunday 1st Service"),
-    ("09-SUNDAY", "Sunday 2nd Service"),
-
-)
-
-MONTH = (
-    ("01-JANUARY", "January"),
-    ("02-FEBRUARY", "February"),
-    ("03-MARCH", "March"),
-    ("04-APRIL", "April"),
-    ("05-MAY", "May"),
-    ("06-JUNE", "June"),
-    ("07-JULY", "July"),
-    ("08-AUGUST", "August"),
-    ("09-SEPTEMBER", "September"),
-    ("10-OCTOBER", "October"),
-    ("11-NOVEMBER", "November"),
-    ("12-DECEMBER", "December"),
-)
-
 
 # Create your models here.
 class Event(models.Model):

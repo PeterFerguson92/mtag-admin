@@ -1,13 +1,9 @@
-import datetime
 from django.shortcuts import render
 from django import forms
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import pandas as pd
-import xlrd
-from dateutil.parser import parse
-import time
 
 class CsvImportForm(forms.Form):
     csv_upload = forms.FileField()

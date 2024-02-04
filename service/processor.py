@@ -5,6 +5,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 import pandas as pd
 
+from service.models import Attendance
+
 class CsvImportForm(forms.Form):
     csv_upload = forms.FileField()
 
@@ -37,9 +39,15 @@ def process_attendance_import(self, request):
         if (men_totals['date'] == None or women_totals['date'] == None
             or (youth_totals['date']== None) or children_totals['date'] == None): 
             messages.warning(request, 'missing date')
-            
+        
+        Attendance.objects.create(date=men_totals['date'],
+                                  number_of_mens=men_totals['present'],
+                                  number_of_women=women_totals['present'],
+                                  number_of_youth=youth_totals['present'],
+                                  number_of_children=children_totals['present'],
+                                  total=total)
         url = reverse('admin:index')
-        return HttpResponseRedirect('http://localhost:8000/admin/service/attendance/upload-csv/')
+        return HttpResponseRedirect(url)
     
     form = CsvImportForm()
     data = {"form": form}

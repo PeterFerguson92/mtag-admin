@@ -115,7 +115,7 @@ export_to_xls.short_description = "Export to XLS"  # short description
 
 
 @admin.register(ServicePlanning)
-class EventAdmin(admin.ModelAdmin):
+class ServicePlanningAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
     fields = (
         "title",

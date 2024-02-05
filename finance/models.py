@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from django.db import models
 from constants import MONTH, SERVICE_TYPE, SOURCE, TRANSACTION_TYPE
@@ -17,7 +18,7 @@ class Transaction(models.Model):
     message = models.TextField("Message", max_length=1024, blank=True, null=True)
     service_type = models.CharField("Service Type",max_length=255,choices=SERVICE_TYPE, blank=True, null=True)
     date = models.DateField("Date",max_length=255)
-    month = models.CharField("Month", max_length=255, choices=MONTH, blank=False, null=False)
+    month = models.CharField("Month", max_length=255, choices=MONTH, editable=False)
     source = models.CharField("Source",max_length=255,choices=SOURCE, default='Manual',  blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -30,6 +31,18 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.type} - {self.member.name} {self.member.surname}"
+    
+    @property
+    def get_month(self): 
+        print(self.date)
+        if self.date:
+           month_index = self.date.month
+           return MONTH[month_index - 1][0]
+        return None
+           
+    def save(self, *args, **kwargs):
+        self.month = self.get_month
+        super().save(*args, **kwargs)
 
 class BankAccount(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

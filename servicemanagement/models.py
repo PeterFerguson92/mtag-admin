@@ -19,6 +19,7 @@ class Member(models.Model):
     member_type = models.CharField("Member type",max_length=255,choices=MEMBER_TYPE, default='Full Member',  blank=True, null=True)
     origin = models.CharField("Origin",max_length=255,choices=ORIGIN, default='Manual',  blank=True, null=True)
     membership_start = models.DateField("Membership start", max_length=255, blank=True, null=True)
+    last_seen = models.DateField("Last seen", auto_now_add=True, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

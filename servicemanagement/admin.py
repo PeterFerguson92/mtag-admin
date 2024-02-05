@@ -2,17 +2,24 @@ from django.urls import path
 from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from .service import export_service_planning_to_xls, export_member_attendace, process_attendance_import
+from .service import (
+    export_service_planning_to_xls,
+    export_member_attendace,
+    process_attendance_import,
+)
 from .models import Attendance, Member, ServicePlanning
+from django.core.exceptions import ObjectDoesNotExist
+
 
 # Register your models here.
 class MemberResource(resources.ModelResource):
     class Meta:
         model = Member
-        
+
+
 @admin.register(Member)
-class MemberAdmin(ImportExportModelAdmin ):
-    search_fields = ("name","surname", "postcode")
+class MemberAdmin(ImportExportModelAdmin):
+    search_fields = ("name", "surname", "postcode")
     fields = (
         "name",
         "middle_name",
@@ -30,13 +37,11 @@ class MemberAdmin(ImportExportModelAdmin ):
         "origin",
     )
     list_display = (
-        "name",
-        "middle_name",
-        "surname",
+        "member_name",
+        "full_address",
         "department",
-        "postcode",
-        "house_number",
         "origin",
+        "last_seen",
         "created_at",
     )
     list_filter = (
@@ -51,21 +56,42 @@ class MemberAdmin(ImportExportModelAdmin ):
         "origin",
         "created_at",
     )
-    search_fields = ['name']
+    search_fields = ["name"]
+    readonly_fields = ["last_seen"]
     actions = ["export_attendace_to_xls"]
     resource_classes = [MemberResource]
+
     def get_search_results(self, request, queryset, search_term):
         print("In get search results")
         results = super().get_search_results(request, queryset, search_term)
         return results
-    
+
+    def member_name(
+        self, instance
+    ):  # name of the method should be same as the field given in `list_display`
+        try:
+            return f"{instance.name} {instance.middle_name} {instance.surname}"
+        except ObjectDoesNotExist:
+            return "ERROR!!"
+
+    def full_address(
+        self, instance
+    ):  # name of the method should be same as the field given in `list_display`
+        try:
+            return f"{instance.house_number} {instance.address} {instance.postcode}"
+        except ObjectDoesNotExist:
+            return "ERROR!!"
+
     @admin.action()
     def export_attendace_to_xls(self, request, queryset):
         response = export_member_attendace()
         return response
 
-    export_attendace_to_xls.short_description = "Export Attendance to XLS"  # short description
-    
+    export_attendace_to_xls.short_description = (
+        "Export Attendance to XLS"  # short description
+    )
+
+
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     fields = (
@@ -82,20 +108,27 @@ class AttendanceAdmin(admin.ModelAdmin):
         "service_type",
         "created_at",
     )
-    list_filter = ("date", "service_type",)
-    
+    list_filter = (
+        "date",
+        "service_type",
+    )
+
     def get_urls(self):
         urls = super().get_urls()
-        new_urls = [path('upload-csv/', self.upload_csv),]
+        new_urls = [
+            path("upload-csv/", self.upload_csv),
+        ]
         return new_urls + urls
-    
+
     def upload_csv(self, request):
         return process_attendance_import(self, request)
-    
+
+
 @admin.action()
 def export_to_xls(self, request, queryset):
     # Create a workbook and add a worksheet.
     return export_service_planning_to_xls(queryset)
+
 
 export_to_xls.short_description = "Export to XLS"  # short description
 
@@ -150,5 +183,8 @@ class ServicePlanningAdmin(admin.ModelAdmin):
         "service_type",
         "created_at",
     )
-    list_filter = ("date", "service_type",)
+    list_filter = (
+        "date",
+        "service_type",
+    )
     actions = [export_to_xls]

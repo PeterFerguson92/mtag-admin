@@ -20,7 +20,6 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = ("type", "member_name", "member_postcode_address","date", "month", "source")
     list_filter = ("type", "date", "member", "source", "month", ("date", DateRangeFilter))
     autocomplete_fields = ['member']
-    readonly_fields = ["month"]
     change_list_template = "admin/daterange/change_list.html"
     actions = ["export_to_xls"]
     

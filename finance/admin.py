@@ -11,6 +11,7 @@ class TransactionAdmin(admin.ModelAdmin):
     fields = (
         "amount",
         "type",
+        "specific_transaction_type",
         "message",
         "member",
         "source",

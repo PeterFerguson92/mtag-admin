@@ -46,6 +46,7 @@ class TransactionView(generics.GenericAPIView):
         return {
             'amount': request.data.get('amount'), 
             'type': request.data.get('type'), 
+            'specific_transaction_type': request.data.get('specificTransactionType'), 
             'member': member.id, 
             'source': request.data.get('source'), 
             'message': request.data.get('message'), 
@@ -67,11 +68,12 @@ class TransactionView(generics.GenericAPIView):
         request_surname = request.data.get('surname')
         request_postcode = request.data.get('postcode')
         request_house_number = request.data.get('houseNumber')
+        member_type = request.data.get('memberType')
         members = Member.objects.filter(name=request_name).filter(surname=request_surname).filter(postcode=request_postcode).filter(house_number=request_house_number)
         data = None
         if members.count() == 0:
             transaction_member = Member.objects.create(name=request_name, surname=request_surname, postcode=request_postcode, 
-                                                       house_number=request_house_number, origin='WEBSITE' )
+                                                       house_number=request_house_number, origin='WEBSITE',member_type=member_type)
             data = self.buildData(request, transaction_member)
         else: 
             data = self.buildData(request, members[0])

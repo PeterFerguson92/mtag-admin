@@ -22,6 +22,11 @@ SOURCE = (
         ('MANUAL', 'Manual',),
     )
 
+ABSENCE_SOURCE = (
+        ('IMPORT', 'Import',),
+        ('MANUAL', 'Manual',),
+    )
+
 ORIGIN = (
         ('WEBSITE', 'Website',),
         ('IMPORT', 'Import',),

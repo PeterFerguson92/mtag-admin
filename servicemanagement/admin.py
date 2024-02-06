@@ -7,7 +7,7 @@ from .service import (
     export_member_attendace,
     process_attendance_import,
 )
-from .models import Attendance, Member, ServicePlanning
+from .models import Absence, Attendance, Member, ServicePlanning
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -62,7 +62,6 @@ class MemberAdmin(ImportExportModelAdmin):
     resource_classes = [MemberResource]
 
     def get_search_results(self, request, queryset, search_term):
-        print("In get search results")
         results = super().get_search_results(request, queryset, search_term)
         return results
 
@@ -101,17 +100,12 @@ class AttendanceAdmin(admin.ModelAdmin):
         "number_of_youth",
         "number_of_children",
         "total",
-        "service_type",
     )
     list_display = (
         "date",
-        "service_type",
         "created_at",
     )
-    list_filter = (
-        "date",
-        "service_type",
-    )
+    list_filter = ("date",)
 
     def get_urls(self):
         urls = super().get_urls()
@@ -188,3 +182,35 @@ class ServicePlanningAdmin(admin.ModelAdmin):
         "service_type",
     )
     actions = [export_to_xls]
+
+
+@admin.register(Absence)
+class AbsenceAdmin(admin.ModelAdmin):
+    # search_fields = ("title__startswith",)
+    fields = (
+        "member",
+        "last_seen",
+        "contact_phone_number",
+        "reason",
+        "contacted",
+        "contacted_date",
+        "person_of_contact",
+    )
+    list_display = (
+        "member_name",
+        "last_seen",
+        "created_at",
+    )
+    list_filter = ("member",)
+    autocomplete_fields = ['member']
+
+    def get_readonly_fields(self, request, obj=None):
+        return ["member","last_seen",]
+    
+    def member_name(
+        self, instance
+    ):  # name of the method should be same as the field given in `list_display`
+        try:
+            return f"{instance.member.name}  {instance.member.surname}"
+        except ObjectDoesNotExist:
+            return "ERROR!!"

@@ -2,7 +2,7 @@ import io
 import xlsxwriter
 import pandas as pd
 from datetime import date
-from .models import Member
+from .models import Absence, Member
 from .models import Attendance
 from django import forms
 from django.urls import reverse
@@ -30,26 +30,26 @@ def process_attendance_import(self, request):
         youth_totals = process_attendance_worksheet(xlsx_file, 'YOUTH')
         print('processing CHILDREN')
         children_totals = process_attendance_worksheet(xlsx_file, 'CHILDREN')
-        total = men_totals["Total"] + women_totals["Total"] + youth_totals["Total"] + children_totals["Total"]
-        full_result = {
-            'men': men_totals,
-            'women': women_totals,
-            'youth': youth_totals,
-            'children': children_totals,
-            'total': total 
-        }
+      
+        if (men_totals == None or women_totals== None
+            or (youth_totals == None) or children_totals == None): 
+            messages.warning(request, 'Please check the selected file, missing date')
+            return HttpResponseRedirect(request.path_info)
         
-        print(full_result)
         if (men_totals['date'] == None or women_totals['date'] == None
             or (youth_totals['date']== None) or children_totals['date'] == None): 
-            messages.warning(request, 'missing date')
+            messages.warning(request, 'Please check the selected file, missing date')
+            return HttpResponseRedirect(request.path_info)
         
+        
+        total = men_totals["Total"] + women_totals["Total"] + youth_totals["Total"] + children_totals["Total"]
         Attendance.objects.create(date=men_totals['date'],
                                   number_of_mens=men_totals['present'],
                                   number_of_women=women_totals['present'],
                                   number_of_youth=youth_totals['present'],
                                   number_of_children=children_totals['present'],
                                   total=total)
+            
         url = reverse('admin:index')
         return HttpResponseRedirect(url)
     
@@ -66,22 +66,30 @@ def process_attendance_worksheet(xlsx_file, worksheet_name):
     total_absent = 0
     total_present = 0
     
-    for p in items:
-    #    print(p)
-        total += 1
-        if(p[2] == 'T' or p[2] == 't'):
-            total_present+=1
-        else:
-            total_absent+=1
-    results = {
-        "date": date,
-        "Total": total,
-        "absent": total_absent,
-        "present": total_present
-    }
-    print(total)
-    return results
-  
+    if(date):
+        for p in items:
+            total += 1
+            if(p[2] == 'T' or p[2] == 't'):
+                total_present+=1
+                Member.objects.filter(id=p[0]).update(last_seen=date)
+            else:
+                member = Member.objects.get(id=p[0])
+                print('member ID', member.id)
+                print(member.last_seen)
+                print(date)
+                delta = date - member.last_seen
+                absentDays = delta.days
+                if(absentDays > 7):
+                    Absence.objects.create(member=member, contact_phone_number=member.telephone, last_seen=member.last_seen)
+        
+        results = { 
+            "date": date,
+            "Total": total,
+            "absent": total_absent,
+            "present": total_present
+        }
+        return results
+    return None
   
 def get_date(raw):
    if raw and 'pandas._libs.tslibs.timestamps.Timestamp' in str(type(raw)):

@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from constants import DEPARTMENTS, MEMBER_TYPE, ORIGIN, SERVICE_TYPE, SERVICES, SEX_CHOICES
+from constants import DEPARTMENTS, MEMBER_TYPE, ORIGIN, SERVICES, SEX_CHOICES
 
 # Create your models here.
 class Member(models.Model):
@@ -40,18 +40,43 @@ class Attendance(models.Model):
     number_of_youth = models.IntegerField("Number of Youth's", blank=True, null=True)
     number_of_children = models.IntegerField("Number of Children's", blank=True, null=True)
     total = models.IntegerField("Total", blank=True, null=True)
-    service_type = models.CharField("Service Type",max_length=255,choices=SERVICE_TYPE, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:
         ordering = ("date", "created_at")
-        verbose_name_plural = "Attendance"
+        verbose_name = "Service Attendance"
+        verbose_name_plural = "Service Attendance"
 
     def __unicode__(self):
         return "%s: /n %s  %s" % (self.date, self.created_at)
 
     def __str__(self):
         return f"{self.date}"
+
+class Absence(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    member = models.ForeignKey(
+        Member,
+        on_delete=models.CASCADE,
+        related_name='absent_member'
+    )
+    contact_phone_number = models.CharField("Contact Phone Number", max_length=255)
+    last_seen = models.DateField("Last seen")
+    reason = models.TextField("Reason", max_length=255,blank=True)
+    contacted = models.BooleanField("Contacted", default=False )
+    contacted_date = models.DateField("Contacted Date", blank=True, null=True)
+    person_of_contact = models.CharField("Person of contact",max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField("Created at", auto_now_add=True)
+
+    class Meta:
+        ordering = ("member", "created_at")
+        verbose_name_plural = "Member Absence"
+
+    def __unicode__(self):
+        return "%s: /n %s  %s" % (self.member, self.created_at)
+
+    def __str__(self):
+        return f"{self.member}"
     
 class ServicePlanning(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

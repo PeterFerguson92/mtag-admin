@@ -10,6 +10,7 @@ class Transaction(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     type = models.CharField("Type",max_length=255,choices=TRANSACTION_TYPE)
+    specific_transaction_type = models.CharField("Specific transaction type", max_length=255,blank=True, null=True)
     member = models.ForeignKey(
         Member,
         on_delete=models.CASCADE,

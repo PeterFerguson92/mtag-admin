@@ -37,6 +37,7 @@ TRANSACTION_TYPE = (
         ('OFFERING', 'Offering',),
         ('TITHE', 'Tithe',),
         ('FREE DONATION', 'Free Donation'),
+         ('OTHER', 'Other'),
     )
 
 SERVICE_TYPE = (

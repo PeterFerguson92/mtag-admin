@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from constants import DEPARTMENTS, MEMBER_TYPE, ORIGIN, SERVICES, SEX_CHOICES
+from constants import ABSENCE_SOURCE, DEPARTMENTS, MEMBER_TYPE, ORIGIN, SERVICES, SEX_CHOICES
 
 # Create your models here.
 class Member(models.Model):
@@ -63,6 +63,7 @@ class Absence(models.Model):
     contact_phone_number = models.CharField("Contact Phone Number", max_length=255)
     last_seen = models.DateField("Last seen")
     reason = models.TextField("Reason", max_length=255,blank=True)
+    source = models.CharField("Source",max_length=255,choices=ABSENCE_SOURCE, default='IMPORT',  blank=True, null=True)
     contacted = models.BooleanField("Contacted", default=False )
     contacted_date = models.DateField("Contacted Date", blank=True, null=True)
     person_of_contact = models.CharField("Person of contact",max_length=255, blank=True, null=True)

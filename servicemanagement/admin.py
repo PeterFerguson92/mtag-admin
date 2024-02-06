@@ -191,6 +191,7 @@ class AbsenceAdmin(admin.ModelAdmin):
         "member",
         "last_seen",
         "contact_phone_number",
+        "source",
         "reason",
         "contacted",
         "contacted_date",
@@ -199,13 +200,16 @@ class AbsenceAdmin(admin.ModelAdmin):
     list_display = (
         "member_name",
         "last_seen",
+        "contacted",
         "created_at",
     )
-    list_filter = ("member",)
+    list_filter = ("member","contacted")
     autocomplete_fields = ['member']
 
     def get_readonly_fields(self, request, obj=None):
-        return ["member","last_seen",]
+        if obj and obj.source == 'IMPORT':
+             return ["member","last_seen","source",]
+        return []
     
     def member_name(
         self, instance

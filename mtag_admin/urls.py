@@ -23,8 +23,11 @@ admin.site.site_header = "MTAG Admin"
 # Add the below line
 admin.site.index_title = "MTAG  App"
 from mtag_admin import settings
-
+def trigger_error(request):
+   division_by_zero = 1 / 0
+   
 urlpatterns = [
+    path('sentry-debug/', trigger_error),
     path("admin/", admin.site.urls),
     path("api/activities/", include("activities.urls")),
     path("api/servicemanagement/", include("servicemanagement.urls")),

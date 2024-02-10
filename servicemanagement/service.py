@@ -69,7 +69,7 @@ def process_attendance_worksheet(xlsx_file, worksheet_name):
     if(date):
         for p in items:
             total += 1
-            if(p[2] == 'T' or p[2] == 't'):
+            if(p[2] == 'P' or p[2] == 'p'):
                 total_present+=1
                 Member.objects.filter(id=p[0]).update(last_seen=date)
             else:

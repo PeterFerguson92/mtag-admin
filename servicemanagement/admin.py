@@ -201,7 +201,6 @@ class AbsenceAdmin(admin.ModelAdmin):
         "member_name",
         "last_seen",
         "contacted",
-        "created_at",
     )
     list_filter = ("member","contacted")
     autocomplete_fields = ['member']

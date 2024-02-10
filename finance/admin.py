@@ -30,7 +30,7 @@ class TransactionAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.source == 'WEBSITE':
-            return ["message"]
+            return ["message", "specific_transaction_type"]
         return []
     
     def member_name(

@@ -10,6 +10,8 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+import logging
+
 
 class CsvImportForm(forms.Form):
     csv_upload = forms.FileField()
@@ -22,26 +24,24 @@ def process_attendance_import(self, request):
         if not xlsx_file.name.endswith('.xlsx'):
             messages.warning(request, 'The wrong file type was uploaded')
             return HttpResponseRedirect(request.path_info)
+        men_sheet = retrive_attendance_worksheet_data(xlsx_file, 'MEN')
+        women_sheet = retrive_attendance_worksheet_data(xlsx_file, 'WOMEN')
+        youth_sheet = retrive_attendance_worksheet_data(xlsx_file, 'YOUTH')
+        children_sheet = retrive_attendance_worksheet_data(xlsx_file, 'CHILDREN')
+        if (men_sheet["date"] == None or women_sheet["date"] == None
+            or (youth_sheet["date"]== None) or children_sheet["date"] == None): 
+            messages.warning(request, 'Please check the selected file, missing date on one or more worksheets')
+            return HttpResponseRedirect(request.path_info)
+        
         print('processing MEN')
-        men_totals = process_attendance_worksheet(xlsx_file, 'MEN')
+        men_totals = process_attendance_worksheet(men_sheet)
         print('processing WOMEN')
-        women_totals = process_attendance_worksheet(xlsx_file, 'WOMEN')
+        women_totals = process_attendance_worksheet(women_sheet)
         print('processing YOUTH')
-        youth_totals = process_attendance_worksheet(xlsx_file, 'YOUTH')
+        youth_totals = process_attendance_worksheet(youth_sheet)
         print('processing CHILDREN')
-        children_totals = process_attendance_worksheet(xlsx_file, 'CHILDREN')
-      
-        if (men_totals == None or women_totals== None
-            or (youth_totals == None) or children_totals == None): 
-            messages.warning(request, 'Please check the selected file, missing date')
-            return HttpResponseRedirect(request.path_info)
-        
-        if (men_totals['date'] == None or women_totals['date'] == None
-            or (youth_totals['date']== None) or children_totals['date'] == None): 
-            messages.warning(request, 'Please check the selected file, missing date')
-            return HttpResponseRedirect(request.path_info)
-        
-        
+        children_totals = process_attendance_worksheet(children_sheet)
+              
         total = men_totals["Total"] + women_totals["Total"] + youth_totals["Total"] + children_totals["Total"]
         Attendance.objects.create(date=men_totals['date'],
                                   number_of_mens=men_totals['present'],
@@ -57,39 +57,48 @@ def process_attendance_import(self, request):
     data = {"form": form}
     return render(request, "admin/csv_upload.html", data)
 
-def process_attendance_worksheet(xlsx_file, worksheet_name):
+def retrive_attendance_worksheet_data(xlsx_file, worksheet_name):
     data = pd.read_excel(xlsx_file, sheet_name=worksheet_name,  header=None)
     rows = data.values.tolist()
-    date = get_date(rows[0][1])
     items = rows[2:]
+    return { "date": get_date(rows[0][1]), "items": items}
+    
+def process_attendance_worksheet(data):
+    date = data['date']
+    items = data['items']
     total = 0
     total_absent = 0
     total_present = 0
     
-    if(date):
-        for p in items:
-            total += 1
-            if(p[2] == 'P' or p[2] == 'p'):
-                total_present+=1
-                Member.objects.filter(id=p[0]).update(last_seen=date)
-            else:
-                member = Member.objects.get(id=p[0])
-                print('member ID', member.id)
-                print(member.last_seen)
-                print(date)
-                delta = date - member.last_seen
-                absentDays = delta.days
-                if(absentDays > 7):
-                    Absence.objects.create(member=member, contact_phone_number=member.telephone, last_seen=member.last_seen)
-        
-        results = { 
+    for p in items:
+        total += 1
+        if(p[2] == 'P' or p[2] == 'p'):
+            print(p[0])
+            print('ATTENDED: ', date)
+            logging.info("I am a breadcrumb")
+            total_present+=1
+            print('started updating last seen date for member with id', p[0])
+            Member.objects.filter(id=p[0]).update(last_seen=date)
+            print('updated last seen date for member with id', p[0])
+        else:
+            print(p[0])
+            print('NOT ATTENDED: ', date)
+            print('calculating absence for member with id', p[0])
+            member = Member.objects.get(id=p[0])
+            delta = date - member.last_seen
+            absentDays = delta.days
+            print('number of absence days for member with id: ', absentDays)
+            if(absentDays > 7):
+                print('creating absence for member with id', p[0])
+                Absence.objects.create(member=member, contact_phone_number=member.telephone, last_seen=member.last_seen)
+                print('created absence for member with id', p[0])
+    results = { 
             "date": date,
             "Total": total,
             "absent": total_absent,
             "present": total_present
         }
-        return results
-    return None
+    return results
   
 def get_date(raw):
    if raw and 'pandas._libs.tslibs.timestamps.Timestamp' in str(type(raw)):

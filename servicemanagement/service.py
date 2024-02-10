@@ -72,32 +72,33 @@ def process_attendance_worksheet(data):
     
     for p in items:
         total += 1
-        if(p[2] == 'P' or p[2] == 'p'):
-            print(p[0])
-            print('ATTENDED: ', date)
-            logging.info("I am a breadcrumb")
-            total_present+=1
-            print('started updating last seen date for member with id', p[0])
-            Member.objects.filter(id=p[0]).update(last_seen=date)
-            print('updated last seen date for member with id', p[0])
-        else:
-            print(p[0])
-            print('NOT ATTENDED: ', date)
-            print('calculating absence for member with id', p[0])
-            member = Member.objects.get(id=p[0])
-            delta = date - member.last_seen
-            absentDays = delta.days
-            print('number of absence days for member with id: ', absentDays)
-            if(absentDays > 7):
-                print('creating absence for member with id', p[0])
-                Absence.objects.create(member=member, contact_phone_number=member.telephone, last_seen=member.last_seen)
-                print('created absence for member with id', p[0])
-    results = { 
-            "date": date,
-            "Total": total,
-            "absent": total_absent,
-            "present": total_present
-        }
+        members = Member.objects.filter(id=p[0])
+        if(members.count() == 1):
+            if(p[2] == 'P' or p[2] == 'p'):
+                print(p[0])
+                print('ATTENDED: ', date)
+                logging.info("I am a breadcrumb")
+                total_present+=1
+                print('started updating last seen date for member with id', p[0])
+                members[0].update(last_seen=date)
+                print('updated last seen date for member with id', p[0])
+            else:
+                print(p[0])
+                print('NOT ATTENDED: ', date)
+                print('calculating absence for member with id', p[0])  
+                delta = date - members[0].last_seen
+                absentDays = delta.days
+                print('number of absence days for member with id: ', absentDays)
+                if(absentDays > 7):
+                    print('creating absence for member with id', p[0])
+                    Absence.objects.create(member=members[0], contact_phone_number=members[0].telephone, last_seen=members[0].last_seen)
+                    print('created absence for member with id', p[0])
+        results = { 
+                "date": date,
+                "Total": total,
+                "absent": total_absent,
+                "present": total_present
+            }
     return results
   
 def get_date(raw):

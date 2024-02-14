@@ -262,4 +262,8 @@ def export_service_planning_to_xls(queryset):
     )
 
     return response
-    
+
+def archive_members(queryset):
+    print(queryset)
+    queryset.update(archived=True)
+    pass

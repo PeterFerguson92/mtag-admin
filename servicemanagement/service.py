@@ -143,7 +143,7 @@ def export_member_attendace():
     return response
 
 def get_members_by_department(department):
-    return Member.objects.filter(department=department)
+    return Member.objects.filter(department=department, active=True)
 
 def build_attendance_worksheet(worksheet_name, workbook, members, bold, normal_format):
     today = date.today()
@@ -262,4 +262,8 @@ def export_service_planning_to_xls(queryset):
     )
 
     return response
-    
+
+def archive_members(queryset):
+    print(queryset)
+    queryset.update(archived=True)
+    pass

@@ -52,7 +52,6 @@ class MemberAdmin(ImportExportModelAdmin):
         "member_name",
         "full_address",
         "department",
-        "origin",
         "last_seen",
         "created_at",
         "active",
@@ -61,7 +60,6 @@ class MemberAdmin(ImportExportModelAdmin):
         "name",
         "surname",
         "postcode",
-        "house_number",
         "sex",
         "department",
         "member_type",
@@ -75,11 +73,6 @@ class MemberAdmin(ImportExportModelAdmin):
     actions = ["export_attendace_to_xls"]
     resource_classes = [MemberResource]
     
-    def has_delete_permission(self, request, obj=None):
-        #Disable delete
-        if request.user.is_superuser:
-             return True
-        return False
 
     def get_search_results(self, request, queryset, search_term):
         results = super().get_search_results(request, queryset, search_term)

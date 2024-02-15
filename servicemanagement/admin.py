@@ -3,6 +3,7 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from .service import (
+    archive_members,
     export_service_planning_to_xls,
     export_member_attendace,
     process_attendance_import,
@@ -19,6 +20,16 @@ class MemberResource(resources.ModelResource):
 
 @admin.register(Member)
 class MemberAdmin(ImportExportModelAdmin):
+    massadmin_exclude = ["name",
+        "middle_name",
+        "surname",
+        "telephone",
+        "postcode",
+        "house_number",
+        "address",
+        "date_of_birth",
+        "age",
+        "sex",]
     search_fields = ("name", "surname", "postcode")
     fields = (
         "name",
@@ -35,31 +46,33 @@ class MemberAdmin(ImportExportModelAdmin):
         "member_type",
         "membership_start",
         "origin",
+        "active"
     )
     list_display = (
         "member_name",
         "full_address",
         "department",
-        "origin",
         "last_seen",
         "created_at",
+        "active",
     )
     list_filter = (
         "name",
         "surname",
         "postcode",
-        "house_number",
         "sex",
         "department",
         "member_type",
         "membership_start",
         "origin",
         "created_at",
+         "active"
     )
     search_fields = ["name"]
     readonly_fields = ["last_seen"]
     actions = ["export_attendace_to_xls"]
     resource_classes = [MemberResource]
+    
 
     def get_search_results(self, request, queryset, search_term):
         results = super().get_search_results(request, queryset, search_term)
@@ -80,6 +93,12 @@ class MemberAdmin(ImportExportModelAdmin):
             return f"{instance.house_number} {instance.address} {instance.postcode}"
         except ObjectDoesNotExist:
             return "ERROR!!"
+    
+    # def get_queryset(self, request):
+    #     queryset = super().get_queryset(request)
+    #     if request.user.is_superuser:
+    #         return queryset
+    #     return queryset.filter(archived=True)
 
     @admin.action()
     def export_attendace_to_xls(self, request, queryset):
@@ -88,6 +107,15 @@ class MemberAdmin(ImportExportModelAdmin):
 
     export_attendace_to_xls.short_description = (
         "Export Attendance to XLS"  # short description
+    )
+    
+    @admin.action()
+    def archive_member(self, request, queryset):
+        response = archive_members(queryset)
+        return response
+
+    archive_member.short_description = (
+        "Archive member/s"  # short description
     )
 
 

@@ -43,6 +43,7 @@ else:
 INSTALLED_APPS = [
     "admin_interface",
     "colorfield",
+    "massadmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

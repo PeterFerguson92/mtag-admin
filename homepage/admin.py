@@ -87,6 +87,8 @@ class DetailAdmin(admin.ModelAdmin):
         "info_content_1",
         "info_text_2",
         "info_content_2",
+        "address",
+        "description"
     )
     list_display = (
         "title",
@@ -124,6 +126,7 @@ class BroadcastAdmin(admin.ModelAdmin):
         "link",
         "created_at",
     )
+
 
 @admin.register(SocialMedia)
 class BroadcastAdmin(admin.ModelAdmin):

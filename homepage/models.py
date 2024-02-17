@@ -168,6 +168,8 @@ class Details(models.Model):
     info_content_2 = models.CharField(
         "Info Content 2", max_length=80, blank=True, null=True
     )
+    address = models.CharField("Address", max_length=180, blank=True, null=True)
+    description = models.TextField("Description", max_length=280, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import AboutUs, Banner, Block, Details, Homepage, Leader, LeadershipBoard, Media, Video
+from .models import AboutUs, Banner, Block, Broadcast, Details, Homepage, Leader, LeadershipBoard, Media, SocialMedia, Video
 
 
 class BannerSerializer(serializers.ModelSerializer):
@@ -20,6 +20,16 @@ class AboutUsSerializer(serializers.ModelSerializer):
 class DetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Details
+        fields = "__all__"
+
+class BroadcastSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Broadcast
+        fields = "__all__"
+
+class SocialMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialMedia
         fields = "__all__"
         
 class VideoSerializer(serializers.ModelSerializer):

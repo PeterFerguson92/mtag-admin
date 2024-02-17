@@ -3,6 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from .models import (
     AboutUs,
+    Broadcast,
     Details,
     Homepage,
     Banner,
@@ -10,6 +11,7 @@ from .models import (
     Leader,
     LeadershipBoard,
     Media,
+    SocialMedia,
     Video,
 )
 
@@ -100,6 +102,37 @@ class VideoAdmin(admin.ModelAdmin):
         "title",
         "featured",
         "description",
+        "created_at",
+    )
+
+
+@admin.register(Broadcast)
+class BroadcastAdmin(admin.ModelAdmin):
+    search_fields = ("title__startswith",)
+    fields = (
+        "title",
+        "subtitle",
+        "link",
+        "preview_image",
+        "stream_title",
+        "stream_subtitle",
+        "stream_description",
+    )
+    list_display = (
+        "title",
+        "subtitle",
+        "link",
+        "created_at",
+    )
+
+@admin.register(SocialMedia)
+class BroadcastAdmin(admin.ModelAdmin):
+    fields = (
+        "facebook_link",
+        "tiktok_link",
+    )
+    list_display = (
+        "title",
         "created_at",
     )
 

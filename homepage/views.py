@@ -1,8 +1,8 @@
 from rest_framework import status, generics
 from rest_framework.response import Response
 
-from .serializers import AboutUsSerializer, HomepageSerializer, LeaderSerializer, LeadershipBoardSerializer
-from .models import AboutUs, Homepage, Leader, LeadershipBoard
+from .serializers import AboutUsSerializer, BroadcastSerializer, DetailSerializer, HomepageSerializer, LeaderSerializer, LeadershipBoardSerializer, SocialMediaSerializer
+from .models import AboutUs, Broadcast, Details, Homepage, Leader, LeadershipBoard, SocialMedia
 
 class HomepageView(generics.GenericAPIView):
     serializer_class = HomepageSerializer
@@ -62,4 +62,43 @@ class LeaderDetailView(generics.GenericAPIView):
             )
 
         serializer = self.serializer_class(leader)
+        return Response({"status": "success", "result": serializer.data})
+    
+class DetailsView(generics.GenericAPIView):
+    serializer_class = DetailSerializer
+
+    def get(self, request):
+        objects = Details.objects.all()
+        if not objects:
+             return Response(
+                {"status": "No details data available"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = self.serializer_class(objects, many=True)
+        return Response({"status": "success", "result": serializer.data})
+    
+class BroadcastView(generics.GenericAPIView):
+    serializer_class = BroadcastSerializer
+
+    def get(self, request):
+        objects = Broadcast.objects.all()
+        if not objects:
+             return Response(
+                {"status": "No brodacast data available"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = self.serializer_class(objects, many=True)
+        return Response({"status": "success", "result": serializer.data})
+
+class SocialMediaView(generics.GenericAPIView):
+    serializer_class = SocialMediaSerializer
+
+    def get(self, request):
+        objects = SocialMedia.objects.all()
+        if not objects:
+             return Response(
+                {"status": "No Social media data available"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = self.serializer_class(objects, many=True)
         return Response({"status": "success", "result": serializer.data})

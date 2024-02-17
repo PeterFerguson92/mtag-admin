@@ -260,7 +260,7 @@ class SocialMedia(models.Model):
         max_length=255,
     )
     facebook_link = models.CharField("Facebook Link", max_length=255)
-    tiktok_link = models.CharField("Facebook Link", max_length=255)
+    tiktok_link = models.CharField("Tik Tok Link", max_length=255)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

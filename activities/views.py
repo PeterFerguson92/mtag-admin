@@ -2,8 +2,8 @@ from rest_framework import status, generics
 from rest_framework.response import Response
 from datetime import datetime, date
 
-from .serializers import EventSerializer, WeeklySerializer, ProgramSerializer
-from .models import Event, Program, Weekly
+from .serializers import EventSerializer, SocialEventSerializer, WeeklySerializer, ProgramSerializer
+from .models import Event, Program, SocialEvent, Weekly
 
 class EventView(generics.GenericAPIView):
     serializer_class = EventSerializer
@@ -34,6 +34,41 @@ class EventDetailView(generics.GenericAPIView):
         if event is None:
             return Response(
                 {"status": "fail", "message": f"Event with Id: {pk} not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = self.serializer_class(event)
+        return Response({"status": "success", "result": serializer.data})
+    
+class SocialEventView(generics.GenericAPIView):
+    serializer_class = SocialEventSerializer
+    queryset = Event.objects.all()
+
+    def get(self, request):
+        events = SocialEvent.objects.all()
+        if not events:
+            return Response(
+                {"status": "No Social Events available"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = self.serializer_class(events, many=True)
+        return Response({"status": "success", "result": serializer.data})
+
+class SocialEventDetailView(generics.GenericAPIView):
+    serializer_class = SocialEventSerializer
+    queryset = Event.objects.all()
+
+    def get_event(self, pk):
+        try:
+            return SocialEvent.objects.get(pk=pk)
+        except:
+            return None
+
+    def get(self, request, pk):
+        event = self.get_event(pk=pk)
+        if event is None:
+            return Response(
+                {"status": "fail", "message": f"Social Event with Id: {pk} not found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
 

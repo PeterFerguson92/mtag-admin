@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Weekly, Event, Monthly, Program
+from .models import SocialEvent, Weekly, Event, Monthly, Program
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -11,6 +11,11 @@ class EventSerializer(serializers.ModelSerializer):
 class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Program
+        fields = "__all__"
+
+class SocialEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialEvent
         fields = "__all__"
 
 class WeeklySerializer(serializers.ModelSerializer):

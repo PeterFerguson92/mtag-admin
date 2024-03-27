@@ -59,6 +59,8 @@ class WeeklyAdmin(admin.ModelAdmin):
         "title",
         "created_at",
     )
+
+
 @admin.register(Monthly)
 class MonthlyAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
@@ -83,14 +85,14 @@ class SocialEventAdmin(admin.ModelAdmin):
         "short_description",
         "description",
         "day",
+        "start_date",
+        "end_date",
         "start_time",
         "end_time",
         "location",
         "cover_image_path",
         "gallery_image_path_1",
         "gallery_image_path_2",
-        "gallery_image_path_3",
-        "gallery_image_path_4",
     )
     list_display = (
         "title",

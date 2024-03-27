@@ -123,6 +123,8 @@ class SocialEvent(models.Model):
     short_description = models.TextField("Short Description", max_length=400, default='')
     description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
     day = models.CharField("Day", max_length=255, choices=DAYS)
+    start_date = models.DateField("Start Date", editable=True, null=True, blank=True)
+    end_date = models.DateField("End Date", editable=True, null=True, blank=True)
     start_time = models.TimeField("Start Time", editable=True)
     end_time = models.TimeField("End Time", editable=True)
     location = models.CharField("Location", max_length=255)
@@ -138,12 +140,6 @@ class SocialEvent(models.Model):
     )
     gallery_image_path_2 = models.ImageField(
         "Gallery image 2", validators=[event_image_restriction], upload_to=event_upload_image_path, null=True, blank=True
-    )
-    gallery_image_path_3 = models.ImageField(
-        "Gallery image 3", validators=[event_image_restriction], upload_to=event_upload_image_path, null=True, blank=True
-    )
-    gallery_image_path_4 = models.ImageField(
-        "Gallery image 4", validators=[event_image_restriction], upload_to=event_upload_image_path, null=True, blank=True
     )
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 

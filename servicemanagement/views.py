@@ -9,7 +9,8 @@ class MemberView(generics.GenericAPIView):
         data = {
             'name': request.data.get('name'), 
             'middle_name': request.data.get('middleName'), 
-            'surname': request.data.get('surname'), 
+            'surname': request.data.get('surname'),
+            'email': request.data.get('email'),  
             'telephone': request.data.get('phone'), 
             'sex': request.data.get('sex'), 
             'member_type': request.data.get('memberType'), 

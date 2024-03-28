@@ -35,6 +35,7 @@ class MemberAdmin(ImportExportModelAdmin):
         "name",
         "middle_name",
         "surname",
+        "email",
         "telephone",
         "postcode",
         "house_number",

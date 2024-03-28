@@ -20,7 +20,9 @@ class Transaction(models.Model):
     service_type = models.CharField("Service Type",max_length=255,choices=SERVICE_TYPE, blank=True, null=True)
     date = models.DateField("Date",max_length=255)
     month = models.CharField("Month", max_length=255, choices=MONTH, editable=False)
-    source = models.CharField("Source",max_length=255,choices=SOURCE, default='Manual',  blank=True, null=True)
+    source = models.CharField("Source",max_length=255,choices=SOURCE, default='Manual', blank=True, null=True)
+    opted_in_gift_aid_donation = models.BooleanField("Opted in gift aid donation", default=False ) 
+    gift_aid_donation_occurence = models.CharField("Gift aid donation occurence", max_length=255, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

@@ -16,6 +16,8 @@ class TransactionAdmin(admin.ModelAdmin):
         "member",
         "source",
         "date",
+        "opted_in_gift_aid_donation",
+        "gift_aid_donation_occurence",
         "service_type",
     )
     list_display = ("type", "member_name", "member_postcode_address","date", "month", "source")

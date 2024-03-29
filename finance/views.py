@@ -49,7 +49,9 @@ class TransactionView(generics.GenericAPIView):
             'specific_transaction_type': request.data.get('specificTransactionType'), 
             'member': member.id, 
             'source': request.data.get('source'), 
-            'message': request.data.get('message'), 
+            'message': request.data.get('message'),
+            "opted_in_gift_aid_donation": request.data.get('optedInGiftAidDonation'),
+            "gift_aid_donation_occurence": request.data.get('giftAidDonationOccurence'),
             'date': currentDate, 
             'month': currentMonth, 
         }

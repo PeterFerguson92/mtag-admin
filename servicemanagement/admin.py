@@ -20,7 +20,8 @@ class MemberResource(resources.ModelResource):
 
 @admin.register(Member)
 class MemberAdmin(ImportExportModelAdmin):
-    massadmin_exclude = ["name",
+    massadmin_exclude = [
+        "name",
         "middle_name",
         "surname",
         "telephone",
@@ -29,7 +30,8 @@ class MemberAdmin(ImportExportModelAdmin):
         "address",
         "date_of_birth",
         "age",
-        "sex",]
+        "sex",
+    ]
     search_fields = ("name", "surname", "postcode")
     fields = (
         "name",
@@ -47,7 +49,7 @@ class MemberAdmin(ImportExportModelAdmin):
         "member_type",
         "membership_start",
         "origin",
-        "active"
+        "active",
     )
     list_display = (
         "member_name",
@@ -67,13 +69,12 @@ class MemberAdmin(ImportExportModelAdmin):
         "membership_start",
         "origin",
         "created_at",
-         "active"
+        "active",
     )
     search_fields = ["name"]
     readonly_fields = ["last_seen"]
     actions = ["export_attendace_to_xls"]
     resource_classes = [MemberResource]
-    
 
     def get_search_results(self, request, queryset, search_term):
         results = super().get_search_results(request, queryset, search_term)
@@ -94,30 +95,38 @@ class MemberAdmin(ImportExportModelAdmin):
             return f"{instance.house_number} {instance.address} {instance.postcode}"
         except ObjectDoesNotExist:
             return "ERROR!!"
+        
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.username == 'root':
+            return queryset
+        if request.user.username == 'youth_dpt':
+            return queryset.filter(department="YOUTH")
+        if request.user.username == 'women_dpt':
+            return queryset.filter(department="WOMEN")
+        if request.user.username == 'men_dpt':
+            return queryset.filter(department="MEN")
+        if request.user.username == 'children_dpt':
+            return queryset.filter(department="CHILDREN")
+        return queryset    
     
-    # def get_queryset(self, request):
-    #     queryset = super().get_queryset(request)
-    #     if request.user.is_superuser:
-    #         return queryset
-    #     return queryset.filter(archived=True)
 
     @admin.action()
     def export_attendace_to_xls(self, request, queryset):
-        response = export_member_attendace()
+        response = export_member_attendace(request.user.username)
         return response
 
     export_attendace_to_xls.short_description = (
         "Export Attendance to XLS"  # short description
     )
-    
+    export_attendace_to_xls.acts_on_all = True
+
     @admin.action()
     def archive_member(self, request, queryset):
         response = archive_members(queryset)
         return response
 
-    archive_member.short_description = (
-        "Archive member/s"  # short description
-    )
+    archive_member.short_description = "Archive member/s"  # short description
 
 
 @admin.register(Attendance)
@@ -226,19 +235,19 @@ class AbsenceAdmin(admin.ModelAdmin):
         "contacted_date",
         "person_of_contact",
     )
-    list_display = (
-        "member_name",
-        "last_seen",
-        "contacted",
-    )
-    list_filter = ("member","contacted")
-    autocomplete_fields = ['member']
+    list_display = ("member_name", "last_seen", "contacted", "member_department")
+    list_filter = ("member", "member__department", "contacted")
+    autocomplete_fields = ["member"]
 
     def get_readonly_fields(self, request, obj=None):
-        if obj and obj.source == 'IMPORT':
-             return ["member","last_seen","source",]
+        if obj and obj.source == "IMPORT":
+            return [
+                "member",
+                "last_seen",
+                "source",
+            ]
         return []
-    
+
     def member_name(
         self, instance
     ):  # name of the method should be same as the field given in `list_display`
@@ -246,3 +255,28 @@ class AbsenceAdmin(admin.ModelAdmin):
             return f"{instance.member.name}  {instance.member.surname}"
         except ObjectDoesNotExist:
             return "ERROR!!"
+
+    def member_department(
+        self, instance
+    ):  # name of the method should be same as the field given in `list_display`
+        try:
+            if instance.member.department:
+                return f"{instance.member.department}"
+            else:
+                return ""
+        except ObjectDoesNotExist:
+            return "ERROR!!"
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.username == 'root':
+            return queryset
+        if request.user.username == 'youth_dpt':
+            return queryset.filter(member__department="YOUTH")
+        if request.user.username == 'women_dpt':
+            return queryset.filter(member__department="WOMEN")
+        if request.user.username == 'men_dpt':
+            return queryset.filter(member__department="MEN")
+        if request.user.username == 'children_dpt':
+            return queryset.filter(member__department="CHILDREN")
+        return queryset

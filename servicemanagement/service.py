@@ -102,12 +102,14 @@ def process_attendance_worksheet(data):
     return results
   
 def get_date(raw):
+   print(raw)
+   print(str(type(raw)))
    if raw and 'pandas._libs.tslibs.timestamps.Timestamp' in str(type(raw)):
        return raw.date()
    else:
        return None
 
-def export_member_attendace():
+def export_member_attendace(user):
     # Create a workbook and add a worksheet.
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {"in_memory": True})
@@ -119,15 +121,32 @@ def export_member_attendace():
     normal_format = workbook.add_format()
     normal_format.set_align('center')
 
-    mens_members = get_members_by_department("MEN")
-    women_members = get_members_by_department("WOMEN")
-    youth_members = get_members_by_department("YOUTH")
-    children_members = get_members_by_department("CHILDREN")
-    build_attendance_worksheet("MEN",workbook, mens_members, bold, normal_format)
-    build_attendance_worksheet("WOMEN",workbook, women_members, bold, normal_format)
-    build_attendance_worksheet("YOUTH",workbook, youth_members, bold, normal_format)
-    build_attendance_worksheet("CHILDREN",workbook, children_members, bold, normal_format)
-
+    if(user == 'root'):
+        mens_members = get_members_by_department("MEN")
+        women_members = get_members_by_department("WOMEN")
+        youth_members = get_members_by_department("YOUTH")
+        children_members = get_members_by_department("CHILDREN")
+        build_attendance_worksheet("MEN",workbook, mens_members, bold, normal_format)
+        build_attendance_worksheet("WOMEN",workbook, women_members, bold, normal_format)
+        build_attendance_worksheet("YOUTH",workbook, youth_members, bold, normal_format)
+        build_attendance_worksheet("CHILDREN",workbook, children_members, bold, normal_format)
+    
+    if(user == 'men_dpt'):
+        members = get_members_by_department("MEN")
+        build_attendance_worksheet("MEN", workbook, members, bold, normal_format)
+        
+    if(user == 'women_dpt'):
+        members = get_members_by_department("WOMEN")
+        build_attendance_worksheet("WOMEN", workbook, members, bold, normal_format)
+        
+    if(user == 'children_dpt'):
+        members = get_members_by_department("CHILDREN")
+        build_attendance_worksheet("CHILDREN", workbook, members, bold, normal_format)
+        
+    if(user == 'youth_dpt'):
+        members = get_members_by_department("YOUTH")
+        build_attendance_worksheet("YOUTH", workbook, members, bold, normal_format)
+        
     workbook.close()
 
     output.seek(0)
@@ -264,6 +283,5 @@ def export_service_planning_to_xls(queryset):
     return response
 
 def archive_members(queryset):
-    print(queryset)
     queryset.update(archived=True)
     pass

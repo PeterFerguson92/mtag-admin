@@ -102,7 +102,9 @@ def process_attendance_worksheet(data):
     return results
   
 def get_date(raw):
-   if raw and 'datetime.datetime' in str(type(raw)):
+   print(raw)
+   print(str(type(raw)))
+   if raw and 'pandas._libs.tslibs.timestamps.Timestamp' in str(type(raw)):
        return raw.date()
    else:
        return None
@@ -281,6 +283,5 @@ def export_service_planning_to_xls(queryset):
     return response
 
 def archive_members(queryset):
-    print(queryset)
     queryset.update(archived=True)
     pass

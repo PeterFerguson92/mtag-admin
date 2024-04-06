@@ -73,7 +73,7 @@ class MemberAdmin(ImportExportModelAdmin):
     )
     search_fields = ["name"]
     readonly_fields = ["last_seen"]
-    actions = ["export_attendace_to_xls"]
+    actions = ["export_attendace_to_xls", "export_men_attendace_to_xls", "export_women_attendace_to_xls", "export_youth_attendace_to_xls", "export_children_attendace_to_xls"]
     resource_classes = [MemberResource]
 
     def get_search_results(self, request, queryset, search_term):
@@ -120,6 +120,42 @@ class MemberAdmin(ImportExportModelAdmin):
         "Export Attendance to XLS"  # short description
     )
     export_attendace_to_xls.acts_on_all = True
+    
+    @admin.action()
+    def export_men_attendace_to_xls(self, request, queryset):
+        response = export_member_attendace('men_dpt')
+        return response
+
+    export_men_attendace_to_xls.short_description = (
+        "Export MEN Attendance to XLS"  # short description
+    )
+    
+    @admin.action()
+    def export_women_attendace_to_xls(self, request, queryset):
+        response = export_member_attendace('women_dpt')
+        return response
+
+    export_women_attendace_to_xls.short_description = (
+        "Export WOMEN Attendance to XLS"  # short description
+    )
+    
+    @admin.action()
+    def export_youth_attendace_to_xls(self, request, queryset):
+        response = export_member_attendace('youth_dpt')
+        return response
+
+    export_youth_attendace_to_xls.short_description = (
+        "Export YOUTH Attendance to XLS"  # short description
+    )
+    
+    @admin.action()
+    def export_children_attendace_to_xls(self, request, queryset):
+        response = export_member_attendace('children_dpt')
+        return response
+
+    export_children_attendace_to_xls.short_description = (
+        "Export CHILDREN Attendance to XLS"  # short description
+    )
 
     @admin.action()
     def archive_member(self, request, queryset):

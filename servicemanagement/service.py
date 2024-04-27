@@ -42,7 +42,7 @@ def process_attendance_import(self, request):
         print('processing CHILDREN')
         children_totals = process_attendance_worksheet(children_sheet)
               
-        total = men_totals["Total"] + women_totals["Total"] + youth_totals["Total"] + children_totals["Total"]
+        total = men_totals["present"] + women_totals["present"] + youth_totals["present"] + children_totals["present"]
         Attendance.objects.create(date=men_totals['date'],
                                   number_of_mens=men_totals['present'],
                                   number_of_women=women_totals['present'],
@@ -57,8 +57,160 @@ def process_attendance_import(self, request):
     data = {"form": form}
     return render(request, "admin/csv_upload.html", data)
 
+def process_men_attendance_import(self, request):
+    attendance_type = 'MEN'
+    if request.method == "POST":
+        xlsx_file = request.FILES["csv_upload"]
+        
+        if not xlsx_file.name.endswith('.xlsx'):
+            messages.warning(request, 'The wrong file type was uploaded')
+            return HttpResponseRedirect(request.path_info)
+        
+        if check_sheet_present(xlsx_file, attendance_type) == False:
+            messages.warning(request, 'Content of sheet not valid, missing ' + attendance_type)
+            return HttpResponseRedirect(request.path_info)
+        
+        sheet = retrive_attendance_worksheet_data(xlsx_file, attendance_type)
+    
+        if (sheet["date"] == None): 
+            messages.warning(request, 'Please check the selected file, missing date on one or more worksheets')
+            return HttpResponseRedirect(request.path_info)
+        
+        print('processing: ' + attendance_type)
+        result = process_attendance_worksheet(sheet)
+        payload = { 'date': result['date'], 'number_of_mens': result['present'],
+                   'total': result['present']}
+        create_or_update_attendance(result['date'], payload)
+            
+        url = reverse('admin:index')
+        return HttpResponseRedirect(url)
+    
+    form = CsvImportForm()
+    data = {"form": form}
+    return render(request, "admin/csv_upload.html", data)
+
+def process_women_attendance_import(self, request):
+    attendance_type = 'WOMEN'
+
+    if request.method == "POST":
+        xlsx_file = request.FILES["csv_upload"]
+        
+        if not xlsx_file.name.endswith('.xlsx'):
+            messages.warning(request, 'The wrong file type was uploaded')
+            return HttpResponseRedirect(request.path_info)
+        
+        if check_sheet_present(xlsx_file, attendance_type) == False:
+            messages.warning(request, 'Content of sheet not valid, missing ' + attendance_type)
+            return HttpResponseRedirect(request.path_info)
+        
+        sheet = retrive_attendance_worksheet_data(xlsx_file, attendance_type)
+    
+        if (sheet["date"] == None): 
+            messages.warning(request, 'Please check the selected file, missing date on one or more worksheets')
+            return HttpResponseRedirect(request.path_info)
+        
+        print('processing: ' + attendance_type)
+        result = process_attendance_worksheet(sheet)
+        payload = { 'date': result['date'], 'number_of_women': result['present'],
+                   'total': result['present']}
+        
+        create_or_update_attendance(result['date'], payload)
+            
+        url = reverse('admin:index')
+        return HttpResponseRedirect(url)
+    
+    form = CsvImportForm()
+    data = {"form": form}
+    return render(request, "admin/csv_upload.html", data)
+
+def process_youth_attendance_import(self, request):
+    attendance_type = 'YOUTH'
+
+    if request.method == "POST":
+
+        xlsx_file = request.FILES["csv_upload"]
+        
+        if not xlsx_file.name.endswith('.xlsx'):
+            messages.warning(request, 'The wrong file type was uploaded')
+            return HttpResponseRedirect(request.path_info)
+        
+        if check_sheet_present(xlsx_file, attendance_type) == False:
+            messages.warning(request, 'Content of sheet not valid, missing ' + attendance_type)
+            return HttpResponseRedirect(request.path_info)
+        
+        sheet = retrive_attendance_worksheet_data(xlsx_file, attendance_type)
+    
+        if (sheet["date"] == None): 
+            messages.warning(request, 'Please check the selected file, missing date on one or more worksheets')
+            return HttpResponseRedirect(request.path_info)
+        
+        
+        print('processing: ' + attendance_type)
+        result = process_attendance_worksheet(sheet)
+        payload = { 'date': result['date'], 'number_of_youth': result['present'],
+                   'total': result['present']}
+        
+        create_or_update_attendance(result['date'], payload)
+            
+        url = reverse('admin:index')
+        return HttpResponseRedirect(url)
+    
+    form = CsvImportForm()
+    data = {"form": form}
+    return render(request, "admin/csv_upload.html", data)
+
+def process_children_attendance_import(self, request):
+    attendance_type = 'CHILDREN'
+    if request.method == "POST":
+
+        xlsx_file = request.FILES["csv_upload"]
+        
+        if not xlsx_file.name.endswith('.xlsx'):
+            messages.warning(request, 'The wrong file type was uploaded')
+            return HttpResponseRedirect(request.path_info)
+        
+        if check_sheet_present(xlsx_file, attendance_type) == False:
+            messages.warning(request, 'Content of sheet not valid, missing ' + attendance_type)
+            return HttpResponseRedirect(request.path_info)
+        
+        sheet = retrive_attendance_worksheet_data(xlsx_file, attendance_type)
+    
+        if (sheet["date"] == None): 
+            messages.warning(request, 'Please check the selected file, missing date on one or more worksheets')
+            return HttpResponseRedirect(request.path_info)
+        
+        
+        print('processing: ' + attendance_type)
+        result = process_attendance_worksheet(sheet)
+        payload = { 'date': result['date'], 'number_of_children': result['present'],
+                   'total': result['present']}
+        
+        create_or_update_attendance(result['date'], payload)
+            
+        url = reverse('admin:index')
+        return HttpResponseRedirect(url)
+    
+    form = CsvImportForm()
+    data = {"form": form}
+    return render(request, "admin/csv_upload.html", data)
+
+def check_sheet_present(xlsx_file, type):
+    xl = pd.ExcelFile(xlsx_file)     
+    return type in xl.sheet_names
+       
+
+def create_or_update_attendance(date, payload):
+    attendanceList = Attendance.objects.filter(date=date)
+    if attendanceList.count() == 0:
+        Attendance.objects.create(**payload)
+    else:
+        attendanceList.update(**payload)
+        attendanceList[0].save()
+
+
 def retrive_attendance_worksheet_data(xlsx_file, worksheet_name):
     data = pd.read_excel(xlsx_file, sheet_name=worksheet_name,  header=None)
+    print(data)
     rows = data.values.tolist()
     items = rows[2:]
     return { "date": get_date(rows[0][1]), "items": items}
@@ -80,7 +232,7 @@ def process_attendance_worksheet(data):
                 logging.info("I am a breadcrumb")
                 total_present+=1
                 print('started updating last seen date for member with id', p[0])
-                members[0].update(last_seen=date)
+                members.update(last_seen=date)
                 print('updated last seen date for member with id', p[0])
             else:
                 print(p[0])
@@ -156,7 +308,7 @@ def export_member_attendace(user):
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
     response["Content-Disposition"] = "attachment;" "filename={}.xlsx".format(
-        "attendance_outline_" + today.strftime("%d/%m/%Y")
+        "attendance_outline_" + user + "_" + today.strftime("%d/%m/%Y")
     )
 
     return response

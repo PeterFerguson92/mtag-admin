@@ -37,10 +37,10 @@ class Member(models.Model):
 class Attendance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateField("Date")
-    number_of_mens = models.IntegerField("Number of Men's", blank=True, null=True)
-    number_of_women = models.IntegerField("Number of Women's", blank=True, null=True)
-    number_of_youth = models.IntegerField("Number of Youth's", blank=True, null=True)
-    number_of_children = models.IntegerField("Number of Children's", blank=True, null=True)
+    number_of_mens = models.IntegerField("Number of Men's", default=0)
+    number_of_women = models.IntegerField("Number of Women's", default=0)
+    number_of_youth = models.IntegerField("Number of Youth's", default=0)
+    number_of_children = models.IntegerField("Number of Children's",  default=0)
     total = models.IntegerField("Total", blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -54,6 +54,10 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.date}"
+    
+    def save(self, *args, **kwargs):
+        self.total = self.number_of_mens + self.number_of_women + self.number_of_youth + self.number_of_children
+        super(Attendance, self).save(*args, **kwargs) # Call the "real" save() method.
 
 class Absence(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

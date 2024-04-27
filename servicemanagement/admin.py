@@ -7,6 +7,10 @@ from .service import (
     export_service_planning_to_xls,
     export_member_attendace,
     process_attendance_import,
+    process_children_attendance_import,
+    process_men_attendance_import,
+    process_women_attendance_import,
+    process_youth_attendance_import,
 )
 from .models import Absence, Attendance, Member, ServicePlanning
 from django.core.exceptions import ObjectDoesNotExist
@@ -185,11 +189,28 @@ class AttendanceAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         new_urls = [
             path("upload-csv/", self.upload_csv),
+            path("upload-men-csv/", self.upload_men_csv),
+            path("upload-women-csv/", self.upload_women_csv),
+            path("upload-youth-csv/", self.upload_youth_csv),
+            path("upload-children-csv/", self.upload_children_csv),
         ]
         return new_urls + urls
 
     def upload_csv(self, request):
         return process_attendance_import(self, request)
+    
+    def upload_men_csv(self, request):
+        return process_men_attendance_import(self, request)
+    
+    def upload_women_csv(self, request):
+        return process_women_attendance_import(self, request)
+    
+    def upload_youth_csv(self, request):
+        return process_youth_attendance_import(self, request)
+    
+    def upload_children_csv(self, request):
+        return process_children_attendance_import(self, request)
+
 
 
 @admin.action()
@@ -271,7 +292,7 @@ class AbsenceAdmin(admin.ModelAdmin):
         "contacted_date",
         "person_of_contact",
     )
-    list_display = ("member_name", "last_seen", "contacted", "member_department")
+    list_display = ("member_name", "last_seen", "contacted", "member_department", "created_at",)
     list_filter = ("member", "member__department", "contacted")
     autocomplete_fields = ["member"]
 

@@ -53,7 +53,7 @@ class Attendance(models.Model):
         return "%s: /n %s  %s" % (self.date, self.created_at)
 
     def __str__(self):
-        return f"{self.date}"
+        return f"{self.date.strftime('%d-%m-%Y')}"
     
     def save(self, *args, **kwargs):
         self.total = self.number_of_mens + self.number_of_women + self.number_of_youth + self.number_of_children

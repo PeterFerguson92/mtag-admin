@@ -1,7 +1,7 @@
 import io
 import xlsxwriter
 import pandas as pd
-from datetime import date
+from datetime import date, datetime
 from .models import Absence, Member
 from .models import Attendance
 from django import forms
@@ -210,7 +210,6 @@ def create_or_update_attendance(date, payload):
 
 def retrive_attendance_worksheet_data(xlsx_file, worksheet_name):
     data = pd.read_excel(xlsx_file, sheet_name=worksheet_name,  header=None)
-    print(data)
     rows = data.values.tolist()
     items = rows[2:]
     return { "date": get_date(rows[0][1]), "items": items}
@@ -254,10 +253,8 @@ def process_attendance_worksheet(data):
     return results
   
 def get_date(raw):
-   print(raw)
-   print(str(type(raw)))
-   if raw and 'pandas._libs.tslibs.timestamps.Timestamp' in str(type(raw)):
-       return raw.date()
+   if raw:
+       return datetime.strptime(raw, '%d-%m-%Y').date()
    else:
        return None
 
@@ -318,9 +315,13 @@ def get_members_by_department(department):
 
 def build_attendance_worksheet(worksheet_name, workbook, members, bold, normal_format):
     today = date.today()
-    worksheet_name = worksheet_name
+    format1 = workbook.add_format()
+    format1.set_num_format('dd-mm-yyyy')
+    format1.set_align('center')
+
     worksheet = workbook.add_worksheet(worksheet_name)
     worksheet.write("A1", "DATE", bold)
+    worksheet.write("B1", today.strftime('%d-%m-%Y'), format1)
     worksheet.write("A2", "MEMBER ID", bold)
     worksheet.write("B2", "FULL NAME", bold)
     worksheet.write("C2", "ATTENDANCE", bold)

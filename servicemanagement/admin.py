@@ -183,6 +183,7 @@ class AttendanceAdmin(admin.ModelAdmin):
         "date",
         "created_at",
     )
+    readonly_fields=('date',)
     list_filter = ("date",)
 
     def get_urls(self):

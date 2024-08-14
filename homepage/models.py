@@ -88,7 +88,7 @@ class AboutUs(models.Model):
     )
     homepage_image = ResizedImageField(
         "Homepage Image",
-        validators=[homepage_about_us_image_restriction],
+        size=[371, 421],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,

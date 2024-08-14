@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 from django_resized import ResizedImageField
 
-from ministries.uploadfiles import ministries_upload_image_path, ministry_cover_image_restriction, ministry_gallery_image_restriction
+from ministries.uploadfiles import ministries_upload_image_path
 
 # Create your models here.
 class Ministry(models.Model):

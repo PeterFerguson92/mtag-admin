@@ -2,7 +2,8 @@ import uuid
 from django.db import models
 
 from constants import DAYS, MONTH
-from .uploadfiles import (event_image_restriction, event_upload_image_path)
+from .uploadfiles import (event_upload_image_path)
+from django_resized import ResizedImageField
 
 # Create your models here.
 class Event(models.Model):
@@ -14,9 +15,9 @@ class Event(models.Model):
     start_time = models.TimeField("Start Time", editable=True)
     end_time = models.TimeField("End Time", editable=True)
     location = models.CharField("Location", max_length=255)
-    cover_image_path = models.ImageField(
+    cover_image_path = ResizedImageField(
         "Cover image",
-        validators=[event_image_restriction],
+        size=[771, 461],
         upload_to=event_upload_image_path,
         null=True,
         blank=True,
@@ -70,9 +71,9 @@ class Program(models.Model):
     start_time = models.TimeField("Start Time", editable=True)
     end_time = models.TimeField("End Time", editable=True)
     location = models.CharField("Location", max_length=255)
-    cover_image_path = models.ImageField(
+    cover_image_path = ResizedImageField(
         "Cover image",
-        validators=[event_image_restriction],
+        size=[771, 461],
         upload_to=event_upload_image_path,
         null=True,
         blank=True,
@@ -128,18 +129,18 @@ class SocialEvent(models.Model):
     start_time = models.TimeField("Start Time", editable=True)
     end_time = models.TimeField("End Time", editable=True)
     location = models.CharField("Location", max_length=255)
-    cover_image_path = models.ImageField(
+    cover_image_path = ResizedImageField(
         "Cover image",
-        validators=[event_image_restriction],
+        size=[771, 461],
         upload_to=event_upload_image_path,
         null=True,
         blank=True,
     )
-    gallery_image_path_1 = models.ImageField(
-        "Gallery image 1", validators=[event_image_restriction], upload_to=event_upload_image_path, null=True, blank=True
+    gallery_image_path_1 = ResizedImageField(
+        "Gallery image 1", size=[771, 461], upload_to=event_upload_image_path, null=True, blank=True
     )
-    gallery_image_path_2 = models.ImageField(
-        "Gallery image 2", validators=[event_image_restriction], upload_to=event_upload_image_path, null=True, blank=True
+    gallery_image_path_2 = ResizedImageField(
+        "Gallery image 2", size=[771, 461], upload_to=event_upload_image_path, null=True, blank=True
     )
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 

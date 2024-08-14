@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from homepage.uploadfiles import *
+from django_resized import ResizedImageField
 
 # Create your models here.
 POSITIONS = (
@@ -8,14 +9,13 @@ POSITIONS = (
     ("right", "right"),
 )
 
-
 class Banner(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255)
     text = models.TextField("Text", max_length=1024, blank=True, null=True)
-    image = models.ImageField(
+    image = ResizedImageField(
         "Image",
-        validators=[homepage_banner_image_restriction],
+        size=[203, 223],
         upload_to=homepage_banner_upload_image_path,
         null=True,
         blank=True,
@@ -86,7 +86,7 @@ class AboutUs(models.Model):
     homepage_display_info_2_text = models.TextField(
         "Homepage Display Info 2 Text", max_length=180, blank=True, null=True
     )
-    homepage_image = models.ImageField(
+    homepage_image = ResizedImageField(
         "Homepage Image",
         validators=[homepage_about_us_image_restriction],
         upload_to=homepage_about_us_cover_upload_image_path,
@@ -111,30 +111,30 @@ class AboutUs(models.Model):
         "Section Display Info 2 Text", max_length=255, blank=True, null=True
     )
 
-    image_1 = models.ImageField(
+    image_1 = ResizedImageField(
         "Image 1",
-        validators=[about_us_image_restriction],
+        size=[271, 301],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
     )
-    image_2 = models.ImageField(
+    image_2 = ResizedImageField(
         "Image 2",
-        validators=[about_us_image_restriction],
+        size=[271, 301],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
     )
-    image_3 = models.ImageField(
+    image_3 = ResizedImageField(
         "Image 3",
-        validators=[about_us_image_restriction],
+        size=[271, 301],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
     )
-    image_4 = models.ImageField(
+    image_4 = ResizedImageField(
         "Image 4",
-        validators=[about_us_image_restriction],
+        size=[271, 301],
         upload_to=homepage_about_us_cover_upload_image_path,
         null=True,
         blank=True,
@@ -192,9 +192,9 @@ class Video(models.Model):
     title = models.CharField("Title", max_length=80)
     description = models.TextField("Description", max_length=180, blank=True, null=True)
     date = models.DateField("Date", blank=True, null=True)
-    image = models.ImageField(
+    image = ResizedImageField(
         "Image",
-        validators=[video_image_restriction],
+        size=[561, 430],
         upload_to=homepage_video_cover_upload_image_path,
         null=True,
         blank=True,
@@ -222,9 +222,9 @@ class Broadcast(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=80)
     subtitle = models.CharField("Subtitle", max_length=80, blank=True, null=True)
-    preview_image = models.ImageField(
+    preview_image = ResizedImageField(
         "Preview Image",
-        validators=[video_image_restriction],
+        size=[561, 430],
         upload_to=homepage_video_cover_upload_image_path,
         null=True,
         blank=True,
@@ -314,9 +314,9 @@ class Leader(models.Model):
     description = models.TextField("Description", max_length=700)
     phone = models.CharField("Phone Number", max_length=100)
     address = models.CharField("Address", max_length=200, blank=True, null=True)
-    image = models.ImageField(
+    image = ResizedImageField(
         "Image",
-        validators=[leader_image_restriction],
+        size=[466, 494],
         upload_to=homepage_leader_cover_upload_image_path,
         null=True,
         blank=True,
@@ -380,16 +380,16 @@ class Homepage(models.Model):
     leadershipBoard = models.OneToOneField(
         LeadershipBoard, on_delete=models.CASCADE, blank=True, null=True
     )
-    banner_background_image = models.ImageField(
+    banner_background_image = ResizedImageField(
         "Banner Background Image",
-        validators=[homepage_background_image_restriction],
+        size=[1921, 905],
         upload_to=homepage_background_upload_image_path,
         null=True,
         blank=True,
     )
-    leadership_board_background_image = models.ImageField(
+    leadership_board_background_image = ResizedImageField(
         "Leadership Board Background Image",
-        validators=[homepage_background_image_restriction],
+        size=[1921, 905],
         upload_to=homepage_background_upload_image_path,
         null=True,
         blank=True,

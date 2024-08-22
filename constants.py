@@ -45,11 +45,13 @@ SERVICE_TYPE = (
         ('FRIDAY_PRAYER_MEETING', 'Friday Prayer Meeting',),
         ('1_SUNDAY_SERVICE', 'Sunday 1st Service',),
         ('2_SUNDAY_SERVICE', 'Sunday 2nd Service'),
+        ('3_SUNDAY_SERVICE', 'Sunday 3rd Service',),
     )
 
 SERVICES = (
     ("01-SERVICE", "1st Service"),
     ("02-SERVICE", "2nd Service"),
+    ("03-SERVICE", "3rd Service"),
 )
 
 

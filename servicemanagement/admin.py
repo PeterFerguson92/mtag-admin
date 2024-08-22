@@ -114,6 +114,37 @@ class MemberAdmin(ImportExportModelAdmin):
             return queryset.filter(department="CHILDREN")
         return queryset    
     
+    def get_actions(self, request):
+        actions = super(MemberAdmin, self).get_actions(request)
+        print(request.user.groups)
+        if request.user.username == 'root':
+            return actions
+        if request.user.username == 'men_dpt':
+            del actions['export_attendace_to_xls']
+            del actions["export_youth_attendace_to_xls"]
+            del actions["export_women_attendace_to_xls"]
+            del actions["export_children_attendace_to_xls"]
+            return actions
+        if request.user.username == 'women_dpt':
+            del actions['export_attendace_to_xls']
+            del actions["export_men_attendace_to_xls"]
+            del actions["export_youth_attendace_to_xls"]
+            del actions["export_children_attendace_to_xls"]
+            return actions
+        if request.user.username == 'youth_dpt':
+            del actions['export_attendace_to_xls']
+            del actions["export_men_attendace_to_xls"]
+            del actions["export_women_attendace_to_xls"]
+            del actions["export_children_attendace_to_xls"]
+            return actions
+        if request.user.username == 'children_dpt':
+            del actions['export_attendace_to_xls']
+            del actions["export_men_attendace_to_xls"]
+            del actions["export_women_attendace_to_xls"]
+            del actions["export_youth_attendace_to_xls"]
+            return actions
+        return  actions  
+    
 
     @admin.action()
     def export_attendace_to_xls(self, request, queryset):

@@ -228,7 +228,6 @@ def process_attendance_worksheet(data):
             if(p[2] == 'P' or p[2] == 'p'):
                 print(p[0])
                 print('ATTENDED: ', date)
-                logging.info("I am a breadcrumb")
                 total_present+=1
                 print('started updating last seen date for member with id', p[0])
                 members.update(last_seen=date)

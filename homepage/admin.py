@@ -143,12 +143,11 @@ class BroadcastAdmin(admin.ModelAdmin):
 @admin.register(Media)
 class MediaAdmin(admin.ModelAdmin):
     search_fields = ("title__startswith",)
-    filter_horizontal = ("videos",)
     fields = (
         "title",
         "videos_header",
         "videos_title",
-        "videos",
+        "video_id",
     )
     list_display = (
         "title",

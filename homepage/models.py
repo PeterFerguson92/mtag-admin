@@ -289,7 +289,9 @@ class Media(models.Model):
     videos_title = models.CharField(
         "Video Section Title", max_length=80, blank=True, null=True
     )
-    videos = models.ManyToManyField(to=Video)
+    video_id = models.CharField(
+        "Video id", max_length=80, blank=False, null=False
+    )
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

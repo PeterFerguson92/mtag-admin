@@ -14,6 +14,7 @@ django-cors-headers==4.0.0
 django-daterange-filterspec==2.0.5
 django-environ==0.10.0
 django-excel-response2==3.0.6
+django-extensions==3.2.3
 django-import-export==3.3.6
 django-mass-edit==3.5.0
 django-modeladmin-reorder==0.3.1

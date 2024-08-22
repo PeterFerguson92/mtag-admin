@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "whitenoise.runserver_nostatic",
+    "django_extensions",
     "rangefilter",
     "rest_framework",
     "reset_migrations",
@@ -238,5 +239,6 @@ ADMIN_REORDER = (
     "homepage",
     {'app': 'servicemanagement', 'models': ('servicemanagement.Member', 'servicemanagement.Absence', 'servicemanagement.Attendance','servicemanagement.ServicePlanning' )},  
     "finance",
-    "auth"
+    "auth",
+    "admin_interface"
 )

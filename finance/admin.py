@@ -1,9 +1,11 @@
+from datetime import datetime
 from django.contrib import admin
 from finance.service import export_transaction_to_xls
 from .models import BankAccount, Transaction
-from daterange.filters import DateRangeFilter
 from django.core.exceptions import ObjectDoesNotExist
-
+from rangefilter.filters import (
+    DateRangeFilterBuilder
+)
 # Register your models here.
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
@@ -21,9 +23,8 @@ class TransactionAdmin(admin.ModelAdmin):
         "service_type",
     )
     list_display = ("type", "member_name", "member_postcode_address","date", "month", "source")
-    list_filter = ("type", "date", "member", "source", "month", ("date", DateRangeFilter))
+    list_filter = ("type", "date", "member", "source", "month", ("date", DateRangeFilterBuilder()))
     autocomplete_fields = ['member']
-    change_list_template = "admin/daterange/change_list.html"
     actions = ["export_to_xls"]
     
     class Media:

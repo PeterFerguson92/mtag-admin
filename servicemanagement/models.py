@@ -8,7 +8,7 @@ class Member(models.Model):
     name = models.CharField("Name", max_length=255,blank=False )
     middle_name = models.CharField("Middle Name", max_length=255,blank=True)
     surname = models.CharField("Surname", max_length=255,blank=False)
-    telephone = models.CharField("Telephone", max_length=255, blank=True, null=True)
+    telephone = models.CharField("Telephone", max_length=255, blank=False, null=False, default='000000')
     email = models.EmailField(max_length = 254, blank=True, null=True)
     postcode = models.CharField("Postcode",max_length=255, blank=True, null=True)
     house_number = models.CharField("House Number", blank=True, null=True, max_length=20)

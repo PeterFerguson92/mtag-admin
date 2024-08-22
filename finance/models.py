@@ -1,8 +1,6 @@
-import datetime
 import uuid
 from django.db import models
 from constants import MONTH, SERVICE_TYPE, SOURCE, TRANSACTION_TYPE
-
 from servicemanagement.models import Member
 
 # Create your models here.

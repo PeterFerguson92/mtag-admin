@@ -8,6 +8,7 @@ diff-match-patch==20230430
 Django==4.2.1
 django-admin==2.0.2
 django-admin-interface==0.28.3
+django-admin-rangefilter==0.13.1
 django-colorfield==0.11.0
 django-cors-headers==4.0.0
 django-daterange-filterspec==2.0.5
@@ -15,12 +16,14 @@ django-environ==0.10.0
 django-excel-response2==3.0.6
 django-import-export==3.3.6
 django-mass-edit==3.5.0
+django-modeladmin-reorder==0.3.1
 django-phonenumber-field==7.2.0
 django-reset-migrations==0.4.0
 django-resized==1.0.2
 django-six==1.0.5
 django-storages==1.13.2
 django-suit==0.2.25
+django-zeromigrations==0.3.2
 djangorestframework==3.14.0
 et-xmlfile==1.1.0
 excel-base==1.0.4

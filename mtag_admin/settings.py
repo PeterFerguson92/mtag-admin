@@ -51,9 +51,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "whitenoise.runserver_nostatic",
-    "daterange.apps.DateRangeFilterConfig",
+    "rangefilter",
     "rest_framework",
     "reset_migrations",
+    "admin_reorder",
     "corsheaders",
     "import_export",
     "activities",
@@ -73,6 +74,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "admin_reorder.middleware.ModelAdminReorder",
 ]
 
 CORS_ORIGIN_WHITELIST = (
@@ -228,3 +230,13 @@ else:
         # We recommend adjusting this value in production.
         profiles_sample_rate=1.0,
     )
+
+ADMIN_REORDER = (
+    
+    {'app': 'activities', 'models': ('activities.Event', 'activities.Weekly', 'activities.Program','activities.Monthly', 'activities.SocialEvent' )},  
+    "ministries",
+    "homepage",
+    {'app': 'servicemanagement', 'models': ('servicemanagement.Member', 'servicemanagement.Absence', 'servicemanagement.Attendance','servicemanagement.ServicePlanning' )},  
+    "finance",
+    "auth"
+)

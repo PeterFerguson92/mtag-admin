@@ -1,8 +1,6 @@
 import uuid
 from django.db import models
-from django_resized import ResizedImageField
 
-from ministries.uploadfiles import ministries_upload_image_path
 
 # Create your models here.
 class Ministry(models.Model):
@@ -10,32 +8,10 @@ class Ministry(models.Model):
     name = models.CharField("Name", max_length=255)
     short_description = models.TextField("Short Description", max_length=400, default='')
     description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
-    cover_image_path = ResizedImageField(
-        "Cover image",
-        size=[421, 371],
-        upload_to=ministries_upload_image_path,
-    )
-    gallery_image_path_1 = ResizedImageField(
-        "Gallery image 1",
-        size=[370, 370],
-        upload_to=ministries_upload_image_path,
-        null=True,
-        blank=True,
-    ) 
-    gallery_image_path_2 = ResizedImageField(
-        "Gallery image 2",
-        size=[370, 370],
-        upload_to=ministries_upload_image_path,
-        null=True,
-        blank=True,
-    )
-    gallery_image_path_3 = ResizedImageField(
-        "Gallery image 3",
-        size=[370, 370],
-        upload_to=ministries_upload_image_path,
-        null=True,
-        blank=True,
-    )
+    cover_image_path = models.CharField("Cover Image", max_length=255, blank=True, null=True)
+    gallery_image_path_1 = models.CharField("Gallery image 1", max_length=255, blank=True, null=True)
+    gallery_image_path_2 = models.CharField("Gallery image 2", max_length=255, blank=True, null=True)
+    gallery_image_path_3 = models.CharField("Gallery image 3", max_length=255, blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

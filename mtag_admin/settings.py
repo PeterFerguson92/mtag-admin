@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     "rangefilter",
     "rest_framework",
     "reset_migrations",
-    "admin_reorder",
     "corsheaders",
     "import_export",
     "activities",

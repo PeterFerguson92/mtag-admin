@@ -8,13 +8,13 @@ from django_resized import ResizedImageField
 # Create your models here.
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", max_length=255)
-    short_description = models.TextField("Short Description", max_length=400, default='')
-    description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
-    day = models.CharField("Day", max_length=255, choices=DAYS)
+    title = models.CharField("Title")
+    short_description = models.TextField("Short Description", default='')
+    description = models.TextField("Long Description", blank=True, null=True)
+    day = models.CharField("Day", choices=DAYS)
     start_time = models.TimeField("Start Time", editable=True)
     end_time = models.TimeField("End Time", editable=True)
-    location = models.CharField("Location", max_length=255)
+    location = models.CharField("Location")
     cover_image_path = ResizedImageField(
         "Cover image",
         size=[771, 461],
@@ -42,7 +42,7 @@ class Event(models.Model):
 
 class Weekly(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", max_length=255, default="Weekly Activities")
+    title = models.CharField("Title", default="Weekly Activities")
     events = models.ManyToManyField(to=Event)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -62,15 +62,15 @@ class Weekly(models.Model):
     
 class Program(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", max_length=255)
-    short_description = models.TextField("Short Description", max_length=400, default='')
-    description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
-    speaker = models.CharField("speaker", max_length=255, blank=True, null=True)
+    title = models.CharField("Title")
+    short_description = models.TextField("Short Description", default='')
+    description = models.TextField("Long Description", blank=True, null=True)
+    speaker = models.CharField("speaker", blank=True, null=True)
     start_date = models.DateField("Start Date", editable=True)
     end_date = models.DateField("End Date", editable=True)
     start_time = models.TimeField("Start Time", editable=True)
     end_time = models.TimeField("End Time", editable=True)
-    location = models.CharField("Location", max_length=255)
+    location = models.CharField("Location")
     cover_image_path = ResizedImageField(
         "Cover image",
         size=[771, 461],
@@ -97,8 +97,8 @@ class Program(models.Model):
 
 class Monthly(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", max_length=255, default="Monthly Activities")
-    month = models.CharField("Month", max_length=255, choices=MONTH, blank=False, null=False)
+    title = models.CharField("Title", default="Monthly Activities")
+    month = models.CharField("Month", choices=MONTH, blank=False, null=False)
     programs = models.ManyToManyField(to=Program)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -120,15 +120,15 @@ class Monthly(models.Model):
 # Create your models here.
 class SocialEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", max_length=255)
-    short_description = models.TextField("Short Description", max_length=400, default='')
-    description = models.TextField("Long Description", max_length=1024, blank=True, null=True)
-    day = models.CharField("Day", max_length=255, choices=DAYS)
+    title = models.CharField("Title")
+    short_description = models.TextField("Short Description", default='')
+    description = models.TextField("Long Description", blank=True, null=True)
+    day = models.CharField("Day", choices=DAYS)
     start_date = models.DateField("Start Date", editable=True, null=True, blank=True)
     end_date = models.DateField("End Date", editable=True, null=True, blank=True)
     start_time = models.TimeField("Start Time", editable=True)
     end_time = models.TimeField("End Time", editable=True)
-    location = models.CharField("Location", max_length=255)
+    location = models.CharField("Location", )
     cover_image_path = ResizedImageField(
         "Cover image",
         size=[771, 461],

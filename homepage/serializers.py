@@ -56,7 +56,7 @@ class LeadershipBoardSerializer(serializers.ModelSerializer):
         
 class HomepageSerializer(serializers.ModelSerializer):
     banners = BannerSerializer(many=True, read_only=True)
-    blocks = BlockSerializer(many=True, read_only=True)
+    blocks = BlockSerializer(many=False, read_only=True)
     aboutUs = AboutUsSerializer(many=False, read_only=True)
     details = DetailSerializer(many=False, read_only=True)
     media = MediaSerializer(many=False, read_only=True)

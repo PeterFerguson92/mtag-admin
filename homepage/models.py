@@ -12,7 +12,7 @@ POSITIONS = (
 class Banner(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255)
-    text = models.TextField("Text", max_length=1024, blank=True, null=True)
+    text = models.TextField("Text", blank=True, null=True)
     image = ResizedImageField(
         "Image",
         size=[203, 223],
@@ -43,12 +43,12 @@ class Banner(models.Model):
 class Block(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255, default="Block Section")
-    block_1_title = models.CharField("Block 1 Title", max_length=80)
-    block_1_text = models.TextField("Block 1 Text", max_length=120)
-    block_2_title = models.CharField("Block 2 Title", max_length=80)
-    block_2_text = models.TextField("Block 2 Text", max_length=120)
-    block_3_title = models.CharField("Block 3 Title", max_length=80)
-    block_3_text = models.TextField("Block 3 Text", max_length=120)
+    block_1_title = models.CharField("Block 1 Title", max_length=500)
+    block_1_text = models.TextField("Block 1 Text")
+    block_2_title = models.CharField("Block 2 Title", max_length=500)
+    block_2_text = models.TextField("Block 2 Text")
+    block_3_title = models.CharField("Block 3 Title", max_length=500)
+    block_3_text = models.TextField("Block 3 Text")
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:
@@ -70,21 +70,21 @@ class AboutUs(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255, default="About Us")
     homepage_display_header = models.CharField(
-        "Homepage Display Header", max_length=80, blank=True, null=True
+        "Homepage Display Header", max_length=500, blank=True, null=True
     )
-    homepage_display_title = models.CharField("Homepage Display Title", max_length=80)
-    homepage_display_text = models.TextField("Homepage Display Text", max_length=180)
+    homepage_display_title = models.CharField("Homepage Display Title", max_length=500)
+    homepage_display_text = models.TextField("Homepage Display Text")
     homepage_display_info_1 = models.CharField(
         "Homepage Display Info 1 Title", max_length=80, blank=True, null=True
     )
     homepage_display_info_1_text = models.TextField(
-        "Homepage Display Info 1 Text", max_length=180, blank=True, null=True
+        "Homepage Display Info 1 Text", blank=True, null=True
     )
     homepage_display_info_2 = models.CharField(
-        "Homepage Display Info 2 Title", max_length=80, blank=True, null=True
+        "Homepage Display Info 2 Title", max_length=500, blank=True, null=True
     )
     homepage_display_info_2_text = models.TextField(
-        "Homepage Display Info 2 Text", max_length=180, blank=True, null=True
+        "Homepage Display Info 2 Text", blank=True, null=True
     )
     homepage_image = ResizedImageField(
         "Homepage Image",
@@ -97,18 +97,18 @@ class AboutUs(models.Model):
         "Section Display Header", max_length=80, blank=True, null=True
     )
     section_display_title = models.CharField("Section Display Title", max_length=80)
-    section_display_text = models.TextField("Section Display Text", max_length=180)
+    section_display_text = models.TextField("Section Display Text")
     section_display_info_1 = models.CharField(
         "Section Display Info 1 Title", max_length=80, blank=True, null=True
     )
     section_display_info_1_text = models.TextField(
-        "Section Display Info 1 Text", max_length=255, blank=True, null=True
+        "Section Display Info 1 Text", blank=True, null=True
     )
     section_display_info_2 = models.CharField(
         "Section Display Info 2 Title", max_length=80, blank=True, null=True
     )
     section_display_info_2_text = models.TextField(
-        "Section Display Info 2 Text", max_length=255, blank=True, null=True
+        "Section Display Info 2 Text", blank=True, null=True
     )
 
     image_1 = ResizedImageField(
@@ -168,8 +168,8 @@ class Details(models.Model):
     info_content_2 = models.CharField(
         "Info Content 2", max_length=80, blank=True, null=True
     )
-    address = models.CharField("Address", max_length=180, blank=True, null=True)
-    description = models.TextField("Description", max_length=280, blank=True, null=True)
+    address = models.CharField("Address", max_length=500, blank=True, null=True)
+    description = models.TextField("Description", blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:
@@ -190,7 +190,7 @@ class Details(models.Model):
 class Video(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=80)
-    description = models.TextField("Description", max_length=180, blank=True, null=True)
+    description = models.TextField("Description", blank=True, null=True)
     date = models.DateField("Date", blank=True, null=True)
     image = ResizedImageField(
         "Image",
@@ -235,7 +235,7 @@ class Broadcast(models.Model):
         "Stream Subtitle", max_length=80, blank=True, null=True
     )
     stream_description = models.TextField(
-        "Description", max_length=230, blank=True, null=True
+        "Description", blank=True, null=True
     )
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -311,7 +311,7 @@ class Leader(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     fullName = models.CharField("Full Name", max_length=300)
     role = models.CharField("Role", max_length=300)
-    description = models.TextField("Description", max_length=700)
+    description = models.TextField("Description")
     phone = models.CharField("Phone Number", max_length=100)
     address = models.CharField("Address", max_length=200, blank=True, null=True)
     image = ResizedImageField(

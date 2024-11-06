@@ -14,7 +14,7 @@ class Transaction(models.Model):
         on_delete=models.CASCADE,
         related_name='members'
     )
-    message = models.TextField("Message", max_length=1024, blank=True, null=True)
+    message = models.TextField("Message", blank=True, null=True)
     service_type = models.CharField("Service Type",max_length=255,choices=SERVICE_TYPE, blank=True, null=True)
     date = models.DateField("Date",max_length=255)
     month = models.CharField("Month", max_length=255, choices=MONTH, editable=False)

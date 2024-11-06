@@ -68,7 +68,7 @@ class Absence(models.Model):
     )
     contact_phone_number = models.CharField("Contact Phone Number", max_length=255)
     last_seen = models.DateField("Last seen")
-    reason = models.TextField("Reason", max_length=255,blank=True)
+    reason = models.TextField("Reason",blank=True)
     source = models.CharField("Source",max_length=255,choices=ABSENCE_SOURCE, default='IMPORT',  blank=True, null=True)
     contacted = models.BooleanField("Contacted", default=False )
     contacted_date = models.DateField("Contacted Date", blank=True, null=True)

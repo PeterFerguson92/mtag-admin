@@ -11,6 +11,7 @@ class MinistryAdmin(admin.ModelAdmin):
         "short_description",
         "description",
         "cover_image_path",
+        "index",
         "gallery_image_path_1",
         "gallery_image_path_2",
         "gallery_image_path_3",

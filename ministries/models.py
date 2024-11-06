@@ -7,9 +7,10 @@ from ministries.uploadfiles import ministries_upload_image_path
 # Create your models here.
 class Ministry(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField("Name")
+    name = models.CharField("Name", max_length=255)
     short_description = models.TextField("Short Description", default='')
     description = models.TextField("Long Description", blank=True, null=True)
+    index = models.IntegerField("Index", blank=True, null=True)
     cover_image_path = ResizedImageField(
         "Cover image",
         size=[421, 371],

@@ -11,7 +11,7 @@ POSITIONS = (
 
 class Banner(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title")
+    title = models.CharField("Title", max_length=255)
     text = models.TextField("Text", blank=True, null=True)
     image = ResizedImageField(
         "Image",
@@ -21,7 +21,7 @@ class Banner(models.Model):
         blank=True,
     )
     image_position = models.CharField(
-        "position", choices=POSITIONS, blank=True, null=True
+        "position", max_length=255, choices=POSITIONS, blank=True, null=True
     )
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -42,12 +42,12 @@ class Banner(models.Model):
 
 class Block(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", default="Block Section")
-    block_1_title = models.CharField("Block 1 Title")
+    title = models.CharField("Title", max_length=255, default="Block Section")
+    block_1_title = models.CharField("Block 1 Title", max_length=500)
     block_1_text = models.TextField("Block 1 Text")
-    block_2_title = models.CharField("Block 2 Title")
+    block_2_title = models.CharField("Block 2 Title", max_length=500)
     block_2_text = models.TextField("Block 2 Text")
-    block_3_title = models.CharField("Block 3 Title")
+    block_3_title = models.CharField("Block 3 Title", max_length=500)
     block_3_text = models.TextField("Block 3 Text")
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -68,20 +68,20 @@ class Block(models.Model):
 
 class AboutUs(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", default="About Us")
+    title = models.CharField("Title", max_length=255, default="About Us")
     homepage_display_header = models.CharField(
-        "Homepage Display Header", blank=True, null=True
+        "Homepage Display Header", max_length=500, blank=True, null=True
     )
-    homepage_display_title = models.CharField("Homepage Display Title")
+    homepage_display_title = models.CharField("Homepage Display Title", max_length=500)
     homepage_display_text = models.TextField("Homepage Display Text")
     homepage_display_info_1 = models.CharField(
-        "Homepage Display Info 1 Title", blank=True, null=True
+        "Homepage Display Info 1 Title", max_length=80, blank=True, null=True
     )
     homepage_display_info_1_text = models.TextField(
         "Homepage Display Info 1 Text", blank=True, null=True
     )
     homepage_display_info_2 = models.CharField(
-        "Homepage Display Info 2 Title", blank=True, null=True
+        "Homepage Display Info 2 Title", max_length=500, blank=True, null=True
     )
     homepage_display_info_2_text = models.TextField(
         "Homepage Display Info 2 Text", blank=True, null=True
@@ -94,18 +94,18 @@ class AboutUs(models.Model):
         blank=True,
     )
     section_display_header = models.CharField(
-        "Section Display Header", blank=True, null=True
+        "Section Display Header", max_length=80, blank=True, null=True
     )
-    section_display_title = models.CharField("Section Display Title")
+    section_display_title = models.CharField("Section Display Title", max_length=80)
     section_display_text = models.TextField("Section Display Text")
     section_display_info_1 = models.CharField(
-        "Section Display Info 1 Title", blank=True, null=True
+        "Section Display Info 1 Title", max_length=80, blank=True, null=True
     )
     section_display_info_1_text = models.TextField(
         "Section Display Info 1 Text", blank=True, null=True
     )
     section_display_info_2 = models.CharField(
-        "Section Display Info 2 Title", blank=True, null=True
+        "Section Display Info 2 Title", max_length=80, blank=True, null=True
     )
     section_display_info_2_text = models.TextField(
         "Section Display Info 2 Text", blank=True, null=True
@@ -159,16 +159,16 @@ class AboutUs(models.Model):
 
 class Details(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", default="Church Details")
-    info_text_1 = models.CharField("Info Text 1", blank=True, null=True)
+    title = models.CharField("Title", max_length=255, default="Church Details")
+    info_text_1 = models.CharField("Info Text 1", max_length=80, blank=True, null=True)
     info_content_1 = models.CharField(
-        "Info Content 1", blank=True, null=True
+        "Info Content 1", max_length=80, blank=True, null=True
     )
-    info_text_2 = models.CharField("Info Text 2", blank=True, null=True)
+    info_text_2 = models.CharField("Info Text 2", max_length=80, blank=True, null=True)
     info_content_2 = models.CharField(
-        "Info Content 2", blank=True, null=True
+        "Info Content 2", max_length=80, blank=True, null=True
     )
-    address = models.CharField("Address", blank=True, null=True)
+    address = models.CharField("Address", max_length=500, blank=True, null=True)
     description = models.TextField("Description", blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -189,7 +189,7 @@ class Details(models.Model):
 
 class Video(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title")
+    title = models.CharField("Title", max_length=80)
     description = models.TextField("Description", blank=True, null=True)
     date = models.DateField("Date", blank=True, null=True)
     image = ResizedImageField(
@@ -199,7 +199,7 @@ class Video(models.Model):
         null=True,
         blank=True,
     )
-    url = models.CharField("Url")
+    url = models.CharField("Url", max_length=255)
     featured = models.BooleanField("Featured", default=False)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -220,8 +220,8 @@ class Video(models.Model):
 
 class Broadcast(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title")
-    subtitle = models.CharField("Subtitle", blank=True, null=True)
+    title = models.CharField("Title", max_length=80)
+    subtitle = models.CharField("Subtitle", max_length=80, blank=True, null=True)
     preview_image = ResizedImageField(
         "Preview Image",
         size=[561, 430],
@@ -229,9 +229,10 @@ class Broadcast(models.Model):
         null=True,
         blank=True,
     )
-    link = models.CharField("Link")
-    stream_title = models.CharField("Stream Title")
-    stream_subtitle = models.CharField("Stream Subtitle", blank=True, null=True
+    link = models.CharField("Link", max_length=255)
+    stream_title = models.CharField("Stream Title", max_length=80)
+    stream_subtitle = models.CharField(
+        "Stream Subtitle", max_length=80, blank=True, null=True
     )
     stream_description = models.TextField(
         "Description", blank=True, null=True
@@ -257,10 +258,11 @@ class SocialMedia(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(
         "Title",
-        default="Social Media Links"
+        default="Social Media Links",
+        max_length=255,
     )
-    facebook_link = models.CharField("Facebook Link")
-    tiktok_link = models.CharField("Tik Tok Link")
+    facebook_link = models.CharField("Facebook Link", max_length=255)
+    tiktok_link = models.CharField("Tik Tok Link", max_length=255)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:
@@ -280,12 +282,12 @@ class SocialMedia(models.Model):
 
 class Media(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", default="Media")
+    title = models.CharField("Title", max_length=80, default="Media")
     videos_header = models.CharField(
-        "Video Section Header", blank=True, null=True
+        "Video Section Header", max_length=80, blank=True, null=True
     )
     videos_title = models.CharField(
-        "Video Section Title", blank=True, null=True
+        "Video Section Title", max_length=80, blank=True, null=True
     )
     videos = models.ManyToManyField(to=Video)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
@@ -307,11 +309,11 @@ class Media(models.Model):
 
 class Leader(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    fullName = models.CharField("Full Name")
-    role = models.CharField("Role")
+    fullName = models.CharField("Full Name", max_length=300)
+    role = models.CharField("Role", max_length=300)
     description = models.TextField("Description")
-    phone = models.CharField("Phone Number")
-    address = models.CharField("Address", blank=True, null=True)
+    phone = models.CharField("Phone Number", max_length=100)
+    address = models.CharField("Address", max_length=200, blank=True, null=True)
     image = ResizedImageField(
         "Image",
         size=[466, 494],
@@ -338,10 +340,10 @@ class Leader(models.Model):
 
 class LeadershipBoard(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", default="Leadership Board")
-    header = models.CharField("Section Header", blank=True, null=True)
+    title = models.CharField("Title", max_length=80, default="Leadership Board")
+    header = models.CharField("Section Header", max_length=80, blank=True, null=True)
     section_title = models.CharField(
-        "Section Title", blank=True, null=True
+        "Section Title", max_length=80, blank=True, null=True
     )
     leaders = models.ManyToManyField(to=Leader)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
@@ -363,7 +365,7 @@ class LeadershipBoard(models.Model):
 
 class Homepage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField("Title", default="Homepage")
+    title = models.CharField("Title", max_length=255, default="Homepage")
     banners = models.ManyToManyField(to=Banner, blank=True, null=True)
     blocks = models.OneToOneField(
         Block, on_delete=models.CASCADE, blank=True, null=True

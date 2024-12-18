@@ -139,6 +139,7 @@ class ServicePlanning(models.Model):
     expected_sermon = models.CharField("Expected Sermon", max_length=255, blank=True, null=True)
     expected_sermon_start_time = models.TimeField("Expected Sermon Start Time", editable=True,blank=True, null=True)
     expected_sermon_end_time = models.TimeField("Expected Sermon End Time", editable=True,blank=True, null=True)
+    report = models.TextField("Report", blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:

@@ -297,6 +297,7 @@ class ServicePlanningAdmin(admin.ModelAdmin):
         "sermon",
         "sermon_start_time",
         "sermon_end_time",
+        "report",
     )
     list_display = (
         "title",

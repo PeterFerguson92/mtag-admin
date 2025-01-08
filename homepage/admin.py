@@ -195,6 +195,7 @@ class HomepageAdmin(admin.ModelAdmin):
         "media",
         "leadershipBoard",
         "banner_background_image",
+        "banner_presentation_image",
         "leadership_board_background_image",
     )
     list_display = (

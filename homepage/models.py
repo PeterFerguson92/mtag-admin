@@ -387,6 +387,13 @@ class Homepage(models.Model):
         null=True,
         blank=True,
     )
+    banner_presentation_image = ResizedImageField(
+        "Banner Presentation Image",
+        size=[1921, 905],
+        upload_to=homepage_background_upload_image_path,
+        null=True,
+        blank=True,
+    )
     leadership_board_background_image = ResizedImageField(
         "Leadership Board Background Image",
         size=[1921, 905],

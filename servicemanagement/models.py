@@ -5,7 +5,7 @@ from constants import ABSENCE_SOURCE, DEPARTMENTS, MEMBER_TYPE, ORIGIN, SERVICES
 # Create your models here.
 class Member(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField("Name", max_length=255,blank=False )
+    name = models.CharField("First Name", max_length=205,blank=False)
     middle_name = models.CharField("Middle Name", max_length=255,blank=True)
     surname = models.CharField("Surname", max_length=255,blank=False)
     telephone = models.CharField("Telephone", max_length=255, blank=False, null=False, default='000000')

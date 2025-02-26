@@ -1,31 +1,68 @@
 import uuid
 from django.db import models
-from constants import ABSENCE_SOURCE, DEPARTMENTS, MEMBER_TYPE, ORIGIN, SERVICES, SEX_CHOICES
+from constants import (
+    ABSENCE_SOURCE,
+    DEPARTMENTS,
+    MEMBER_TYPE,
+    ORIGIN,
+    SERVICES,
+    SEX_CHOICES,
+)
+
 
 # Create your models here.
 class Member(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField("First Name", max_length=205,blank=False)
-    middle_name = models.CharField("Middle Name", max_length=255,blank=True)
-    surname = models.CharField("Surname", max_length=255,blank=False)
-    telephone = models.CharField("Telephone", max_length=255, blank=False, null=False, default='000000')
-    email = models.EmailField(max_length = 254, blank=True, null=True)
-    postcode = models.CharField("Postcode",max_length=255, blank=True, null=True)
-    house_number = models.CharField("House Number", blank=True, null=True, max_length=20)
-    address = models.CharField("Address",max_length=255, blank=True, null=True)
+    name = models.CharField("First Name", max_length=205, blank=False)
+    middle_name = models.CharField("Middle Name", max_length=255, blank=True)
+    surname = models.CharField("Surname", max_length=255, blank=False)
+    telephone = models.CharField(
+        "Telephone", max_length=255, blank=False, null=False, default="000000"
+    )
+    email = models.EmailField(max_length=254, blank=True, null=True)
+    postcode = models.CharField("Postcode", max_length=255, blank=True, null=True)
+    house_number = models.CharField(
+        "House Number", blank=True, null=True, max_length=20
+    )
+    address = models.CharField("Address", max_length=255, blank=True, null=True)
     date_of_birth = models.DateField("Date Of Birth", blank=True, null=True)
     age = models.IntegerField("Age", blank=True, null=True)
-    sex = models.CharField(max_length=50,choices=SEX_CHOICES, blank=True, null=True)
-    department = models.CharField("Department",max_length=255,choices=DEPARTMENTS, blank=True, null=True)
-    member_type = models.CharField("Member type",max_length=255,choices=MEMBER_TYPE, default='Full Member',  blank=True, null=True)
-    origin = models.CharField("Origin",max_length=255,choices=ORIGIN, default='Manual',  blank=True, null=True)
-    membership_start = models.DateField("Membership start", max_length=255, blank=True, null=True)
+    sex = models.CharField(max_length=50, choices=SEX_CHOICES, blank=True, null=True)
+    department = models.CharField(
+        "Department", max_length=255, choices=DEPARTMENTS, blank=True, null=True
+    )
+    member_type = models.CharField(
+        "Member type",
+        max_length=255,
+        choices=MEMBER_TYPE,
+        default="Full Member",
+        blank=True,
+        null=True,
+    )
+    origin = models.CharField(
+        "Origin",
+        max_length=255,
+        choices=ORIGIN,
+        default="Manual",
+        blank=True,
+        null=True,
+    )
+    membership_start = models.DateField(
+        "Membership start", max_length=255, blank=True, null=True
+    )
     last_seen = models.DateField("Last seen", auto_now_add=True, blank=True, null=True)
-    active = models.BooleanField("Active", default=True )
+    active = models.BooleanField("Active", default=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:
-        ordering = ("name","surname","member_type","postcode", "origin", "created_at")
+        ordering = (
+            "name",
+            "surname",
+            "member_type",
+            "postcode",
+            "origin",
+            "created_at",
+        )
         verbose_name_plural = "Members"
 
     def __unicode__(self):
@@ -34,13 +71,22 @@ class Member(models.Model):
     def __str__(self):
         return f"{self.name} {self.middle_name} {self.surname}"
 
+
 class Attendance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateField("Date")
+    service_type = models.CharField(
+        "Service Type",
+        max_length=255,
+        choices=SERVICES,
+        blank=False,
+        null=False,
+        default="1st Service",
+    )
     number_of_mens = models.IntegerField("Number of Men's", default=0)
     number_of_women = models.IntegerField("Number of Women's", default=0)
     number_of_youth = models.IntegerField("Number of Youth's", default=0)
-    number_of_children = models.IntegerField("Number of Children's",  default=0)
+    number_of_children = models.IntegerField("Number of Children's", default=0)
     total = models.IntegerField("Total", blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -54,25 +100,38 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.date.strftime('%d-%m-%Y')}"
-    
+
     def save(self, *args, **kwargs):
-        self.total = self.number_of_mens + self.number_of_women + self.number_of_youth + self.number_of_children
-        super(Attendance, self).save(*args, **kwargs) # Call the "real" save() method.
+        self.total = (
+            self.number_of_mens
+            + self.number_of_women
+            + self.number_of_youth
+            + self.number_of_children
+        )
+        super(Attendance, self).save(*args, **kwargs)  # Call the "real" save() method.
+
 
 class Absence(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member = models.ForeignKey(
-        Member,
-        on_delete=models.CASCADE,
-        related_name='absent_member'
+        Member, on_delete=models.CASCADE, related_name="absent_member"
     )
     contact_phone_number = models.CharField("Contact Phone Number", max_length=255)
     last_seen = models.DateField("Last seen")
-    reason = models.TextField("Reason",blank=True)
-    source = models.CharField("Source",max_length=255,choices=ABSENCE_SOURCE, default='IMPORT',  blank=True, null=True)
-    contacted = models.BooleanField("Contacted", default=False )
+    reason = models.TextField("Reason", blank=True)
+    source = models.CharField(
+        "Source",
+        max_length=255,
+        choices=ABSENCE_SOURCE,
+        default="IMPORT",
+        blank=True,
+        null=True,
+    )
+    contacted = models.BooleanField("Contacted", default=False)
     contacted_date = models.DateField("Contacted Date", blank=True, null=True)
-    person_of_contact = models.CharField("Person of contact",max_length=255, blank=True, null=True)
+    person_of_contact = models.CharField(
+        "Person of contact", max_length=255, blank=True, null=True
+    )
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
     class Meta:
@@ -84,7 +143,8 @@ class Absence(models.Model):
 
     def __str__(self):
         return f"{self.member}"
-    
+
+
 class ServicePlanning(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField("Title", max_length=255, default="Sunday Service")
@@ -92,53 +152,117 @@ class ServicePlanning(models.Model):
         "Service Type", max_length=255, choices=SERVICES, blank=False, null=False
     )
     date = models.DateField("Date", editable=True, blank=False, null=False)
-    
-    mc = models.CharField("MC", max_length=255, blank=True, null=True)
-    mc_start_time = models.TimeField("MC Start Time", editable=True,blank=True, null=True)
-    mc_end_time = models.TimeField("MC End Time", editable=True,blank=True, null=True)
-    expected_mc = models.CharField("Expected MC", max_length=255,blank=True, null=True)
-    expected_mc_start_time = models.TimeField("Expected MC Start Time", editable=True,blank=True, null=True)
-    expected_mc_end_time = models.TimeField("Expected MC End Time", editable=True,blank=True, null=True)
-    
-    worship_praise = models.CharField("Worship and Praise", max_length=255, blank=True, null=True)
-    worship_praise_start_time = models.TimeField("Worship and Praise Start Time", editable=True,blank=True, null=True)
-    worship_praise_end_time = models.TimeField("Worship and Praise End Time", editable=True,blank=True, null=True)
-    expected_worship_praise = models.CharField(
-        "Expected Worship and Praise", max_length=255,blank=True, null=True
-    )
-    expected_worship_praise_start_time = models.TimeField("Expected Worship and Praise Time", editable=True,blank=True, null=True)
-    expected_worship_praise_end_time = models.TimeField("Expected Worship and Praise End Time", editable=True,blank=True, null=True)
-    
-    bible_reading = models.CharField("Bible Reading", max_length=255,blank=True, null=True)
-    bible_reading_start_time = models.TimeField("Bible Reading Start Time", editable=True,blank=True, null=True)
-    bible_reading_end_time = models.TimeField("Bible Reading End Time", editable=True,blank=True, null=True)
 
-    expected_bible_reading = models.CharField("Expected Bible Reading", max_length=255,blank=True, null=True)
-    expected_bible_reading_start_time = models.TimeField("Expected Bible Reading Start Time", editable=True,blank=True, null=True)
-    expected_bible_reading_end_time = models.TimeField("Expected Bible Reading End Time", editable=True,blank=True, null=True)
-    
+    mc = models.CharField("MC", max_length=255, blank=True, null=True)
+    mc_start_time = models.TimeField(
+        "MC Start Time", editable=True, blank=True, null=True
+    )
+    mc_end_time = models.TimeField("MC End Time", editable=True, blank=True, null=True)
+    expected_mc = models.CharField("Expected MC", max_length=255, blank=True, null=True)
+    expected_mc_start_time = models.TimeField(
+        "Expected MC Start Time", editable=True, blank=True, null=True
+    )
+    expected_mc_end_time = models.TimeField(
+        "Expected MC End Time", editable=True, blank=True, null=True
+    )
+
+    worship_praise = models.CharField(
+        "Worship and Praise", max_length=255, blank=True, null=True
+    )
+    worship_praise_start_time = models.TimeField(
+        "Worship and Praise Start Time", editable=True, blank=True, null=True
+    )
+    worship_praise_end_time = models.TimeField(
+        "Worship and Praise End Time", editable=True, blank=True, null=True
+    )
+    expected_worship_praise = models.CharField(
+        "Expected Worship and Praise", max_length=255, blank=True, null=True
+    )
+    expected_worship_praise_start_time = models.TimeField(
+        "Expected Worship and Praise Time", editable=True, blank=True, null=True
+    )
+    expected_worship_praise_end_time = models.TimeField(
+        "Expected Worship and Praise End Time", editable=True, blank=True, null=True
+    )
+
+    bible_reading = models.CharField(
+        "Bible Reading", max_length=255, blank=True, null=True
+    )
+    bible_reading_start_time = models.TimeField(
+        "Bible Reading Start Time", editable=True, blank=True, null=True
+    )
+    bible_reading_end_time = models.TimeField(
+        "Bible Reading End Time", editable=True, blank=True, null=True
+    )
+
+    expected_bible_reading = models.CharField(
+        "Expected Bible Reading", max_length=255, blank=True, null=True
+    )
+    expected_bible_reading_start_time = models.TimeField(
+        "Expected Bible Reading Start Time", editable=True, blank=True, null=True
+    )
+    expected_bible_reading_end_time = models.TimeField(
+        "Expected Bible Reading End Time", editable=True, blank=True, null=True
+    )
+
     mtag_news = models.CharField("MTAG news", max_length=255, blank=True, null=True)
-    mtag_news_start_time = models.TimeField("MTAG news Start Time", editable=True,blank=True, null=True)
-    mtag_news_end_time = models.TimeField("MTAG news End Time", editable=True,blank=True, null=True)
-    expected_mtag_news = models.CharField("Expected MTAG news", max_length=255, blank=True, null=True)
-    expected_mtag_news_start_time = models.TimeField("Expected MTAG news Start Time", editable=True,blank=True, null=True)
-    expected_mtag_news_end_time = models.TimeField("Expected MTAG news End Time", editable=True,blank=True, null=True)
-    
-    offering_ministration = models.CharField("Offering & Ministration", max_length=255, blank=True, null=True)
-    offering_ministration_start_time = models.TimeField("Offering & Ministration Start Time", editable=True,blank=True, null=True)
-    offering_ministration_end_time = models.TimeField("Offering & Ministration End Time", editable=True,blank=True, null=True)
+    mtag_news_start_time = models.TimeField(
+        "MTAG news Start Time", editable=True, blank=True, null=True
+    )
+    mtag_news_end_time = models.TimeField(
+        "MTAG news End Time", editable=True, blank=True, null=True
+    )
+    expected_mtag_news = models.CharField(
+        "Expected MTAG news", max_length=255, blank=True, null=True
+    )
+    expected_mtag_news_start_time = models.TimeField(
+        "Expected MTAG news Start Time", editable=True, blank=True, null=True
+    )
+    expected_mtag_news_end_time = models.TimeField(
+        "Expected MTAG news End Time", editable=True, blank=True, null=True
+    )
+
+    offering_ministration = models.CharField(
+        "Offering & Ministration", max_length=255, blank=True, null=True
+    )
+    offering_ministration_start_time = models.TimeField(
+        "Offering & Ministration Start Time", editable=True, blank=True, null=True
+    )
+    offering_ministration_end_time = models.TimeField(
+        "Offering & Ministration End Time", editable=True, blank=True, null=True
+    )
     expected_offering_ministration = models.CharField(
         "Expected Offering & Ministration", max_length=255, blank=True, null=True
     )
-    expected_offering_ministration_start_time = models.TimeField("Expected Offering & Ministration Start Time", editable=True,blank=True, null=True)
-    expected_offering_ministration_end_time = models.TimeField("Expected Offering & Ministration End Time", editable=True,blank=True, null=True)
-    
+    expected_offering_ministration_start_time = models.TimeField(
+        "Expected Offering & Ministration Start Time",
+        editable=True,
+        blank=True,
+        null=True,
+    )
+    expected_offering_ministration_end_time = models.TimeField(
+        "Expected Offering & Ministration End Time",
+        editable=True,
+        blank=True,
+        null=True,
+    )
+
     sermon = models.CharField("Sermon", max_length=255, blank=True, null=True)
-    sermon_start_time = models.TimeField("Sermon Start Time", editable=True,blank=True, null=True)
-    sermon_end_time = models.TimeField("Sermon End Time", editable=True,blank=True, null=True)
-    expected_sermon = models.CharField("Expected Sermon", max_length=255, blank=True, null=True)
-    expected_sermon_start_time = models.TimeField("Expected Sermon Start Time", editable=True,blank=True, null=True)
-    expected_sermon_end_time = models.TimeField("Expected Sermon End Time", editable=True,blank=True, null=True)
+    sermon_start_time = models.TimeField(
+        "Sermon Start Time", editable=True, blank=True, null=True
+    )
+    sermon_end_time = models.TimeField(
+        "Sermon End Time", editable=True, blank=True, null=True
+    )
+    expected_sermon = models.CharField(
+        "Expected Sermon", max_length=255, blank=True, null=True
+    )
+    expected_sermon_start_time = models.TimeField(
+        "Expected Sermon Start Time", editable=True, blank=True, null=True
+    )
+    expected_sermon_end_time = models.TimeField(
+        "Expected Sermon End Time", editable=True, blank=True, null=True
+    )
     report = models.TextField("Report", blank=True, null=True)
     created_at = models.DateTimeField("Created at", auto_now_add=True)
 
@@ -151,4 +275,3 @@ class ServicePlanning(models.Model):
 
     def __str__(self):
         return f"{self.title} {self.service_type} {self.date}"
-    

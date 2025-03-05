@@ -21,7 +21,6 @@ class CsvImportForm(forms.Form):
 
 def process_attendance_import(self, request):
     if request.method == "POST":
-        print("HERE")
         xlsx_file = request.FILES["csv_upload"]
 
         if not xlsx_file.name.endswith(".xlsx"):
@@ -45,33 +44,18 @@ def process_attendance_import(self, request):
 
         print("--------------------------------------")
         print("Processing MEN")
-        men_totals = process_attendance_worksheet(men_sheet)
-        # print(men_totals)
-        print("--------------------------------------")
+        men_result_sheet = process_attendance_worksheet(men_sheet)
+        calculate_attendance(men_sheet["date"], men_result_sheet, 'number_of_mens')
+        print("Processing WOMEN")
+        women_sheet_result = process_attendance_worksheet(women_sheet)
+        calculate_attendance(women_sheet["date"], women_sheet_result, 'number_of_women')
+        print("Processing YOUTH")
+        youth_sheet_result = process_attendance_worksheet(youth_sheet)
+        calculate_attendance(youth_sheet["date"], youth_sheet_result, 'number_of_youth')
+        print("Processing CHILDREN")
+        children_sheet_result = process_attendance_worksheet(children_sheet)
+        calculate_attendance(children_sheet["date"], children_sheet_result, 'number_of_children')
 
-        # print("processing WOMEN")
-        # women_totals = process_attendance_worksheet(women_sheet)
-        # print("--------------------------------------")
-        # print("processing YOUTH")
-        # youth_totals = process_attendance_worksheet(youth_sheet)
-        # print("--------------------------------------")
-        # print("processing CHILDREN")
-        # children_totals = process_attendance_worksheet(children_sheet)
-
-        # total = (
-        #     men_totals["present"]
-        #     + women_totals["present"]
-        #     + youth_totals["present"]
-        #     + children_totals["present"]
-        # )
-        # Attendance.objects.create(
-        #     date=men_totals["date"],
-        #     number_of_mens=men_totals["present"],
-        #     number_of_women=women_totals["present"],
-        #     number_of_youth=youth_totals["present"],
-        #     number_of_children=children_totals["present"],
-        #     total=total,
-        # )
 
         url = reverse("admin:index")
         return HttpResponseRedirect(url)
@@ -109,25 +93,7 @@ def process_men_attendance_import(self, request):
 
         print("processing: " + attendance_type)
         result = process_attendance_worksheet(sheet)
-        # totals = []
-        # print(result)
-        # # payload = {
-        # #     "date": result["date"],
-        # #     "number_of_mens": result["present"],
-        # #     "total": result["present"],
-        # # }
-        for service in EXCEL_SERVICES:
-            print("processing results for: " + service["description"])
-            processed_result = process_service_results(result, service["description"])
-            payload = {
-                "date": result["date"],
-                "number_of_mens": processed_result["total"],
-                "total": processed_result["total"],
-            }
-            create_or_update_attendance(processed_result['date'], payload)
-            
-        
-       
+        calculate_attendance(sheet["date"], result, 'number_of_mens')
         url = reverse("admin:index")
         return HttpResponseRedirect(url)
 
@@ -163,13 +129,7 @@ def process_women_attendance_import(self, request):
 
         print("processing: " + attendance_type)
         result = process_attendance_worksheet(sheet)
-        payload = {
-            "date": result["date"],
-            "number_of_women": result["present"],
-            "total": result["present"],
-        }
-
-        create_or_update_attendance(result["date"], payload)
+        calculate_attendance(sheet["date"], result, 'number_of_women')
 
         url = reverse("admin:index")
         return HttpResponseRedirect(url)
@@ -207,13 +167,7 @@ def process_youth_attendance_import(self, request):
 
         print("processing: " + attendance_type)
         result = process_attendance_worksheet(sheet)
-        payload = {
-            "date": result["date"],
-            "number_of_youth": result["present"],
-            "total": result["present"],
-        }
-
-        create_or_update_attendance(result["date"], payload)
+        calculate_attendance(sheet["date"], result, 'number_of_youth')
 
         url = reverse("admin:index")
         return HttpResponseRedirect(url)
@@ -247,16 +201,8 @@ def process_children_attendance_import(self, request):
                 "Please check the selected file, missing date on one or more worksheets",
             )
             return HttpResponseRedirect(request.path_info)
-
-        print("processing: " + attendance_type)
         result = process_attendance_worksheet(sheet)
-        payload = {
-            "date": result["date"],
-            "number_of_children": result["present"],
-            "total": result["present"],
-        }
-
-        create_or_update_attendance(result["date"], payload)
+        calculate_attendance(sheet["date"], result, 'number_of_children')
 
         url = reverse("admin:index")
         return HttpResponseRedirect(url)
@@ -270,16 +216,28 @@ def check_sheet_present(xlsx_file, type):
     xl = pd.ExcelFile(xlsx_file)
     return type in xl.sheet_names
 
+def calculate_attendance(date, result, attribute):
+    for service in EXCEL_SERVICES:
+        processed_result = process_service_results(result, service["description"])
+        payload = {
+            "date": date,
+            "service_type": processed_result["service_type"],
+            attribute: processed_result["total"],
+            "total": processed_result["total"],
+        }
+        create_or_update_attendance(date, payload)
+
 def process_service_results(results, service_type):
     total = 0
     for result in results:
-        if result["service_type"] == service_type and result["is_present"]:
-            total = total + 1
+        for attendance in result['attendance']:
+            if attendance["service_type"] == service_type and attendance["is_present"]:
+                total = total + 1
 
-    return {'total': total, 'service_type': service_type, 'date':  result["date"]}
+    return {"total": total, "service_type": service_type}
 
 def create_or_update_attendance(date, payload):
-    attendanceList = Attendance.objects.filter(date=date)
+    attendanceList = Attendance.objects.filter(date=date).filter(service_type=payload['service_type'])
     if attendanceList.count() == 0:
         Attendance.objects.create(**payload)
     else:
@@ -301,14 +259,10 @@ def process_attendance_worksheet(data):
     services_result = []
 
     for member_row in members_info:
-        total += 1
         members = Member.objects.filter(id=member_row[0])
         if members.count() == 1:
-            # print("*******************************************")
-            # print("Member in analysis: " + member_row[1])
             attendance = []
             for service in EXCEL_SERVICES:
-                print("Processing service: " + service["description"])
                 is_present = process_service(
                     member_row,
                     service["index"],
@@ -323,13 +277,10 @@ def process_attendance_worksheet(data):
                         "date": export_date,
                     }
                 )
-            is_member_absent = not any(obj['is_present'] == True for obj in attendance)   
-            print(is_member_absent)             
-            if(is_member_absent):
-                print(members)
+            is_member_absent = not any(obj["is_present"] == True for obj in attendance)
+            if is_member_absent:
                 create_member_absence(export_date, members)
-            services_result.append({'name': member_row[1], 'attendance': attendance})
-
+            services_result.append({"name": member_row[1], "attendance": attendance})
 
     return services_result
 
@@ -353,14 +304,9 @@ def process_service(
     return is_present
 
 def create_member_absence(export_date, member_data):
-    print('Creating absence for :')
-    print(member_data)
-    print(member_data[0].last_seen)
     delta = export_date - member_data[0].last_seen
     absentDays = delta.days
-    print("number of absence days for member : ", absentDays)
     if absentDays > 7:
-    # print("creating absence for member with id", member_row[0])
         Absence.objects.create(
             member=member_data[0],
             contact_phone_number=member_data[0].telephone,

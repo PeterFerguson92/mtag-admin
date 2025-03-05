@@ -217,6 +217,7 @@ class AttendanceAdmin(admin.ModelAdmin):
     )
     list_display = (
         "date",
+        "service_type",
         "created_at",
     )
     readonly_fields = ("date",)

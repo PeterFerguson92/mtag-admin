@@ -44,11 +44,10 @@ def process_attendance_import(self, request):
             return HttpResponseRedirect(request.path_info)
 
         print("--------------------------------------")
-        print("processing MEN")
+        print("Processing MEN")
         men_totals = process_attendance_worksheet(men_sheet)
-        print(men_totals)
+        # print(men_totals)
         print("--------------------------------------")
-        # process_results(men_totals)
 
         # print("processing WOMEN")
         # women_totals = process_attendance_worksheet(women_sheet)
@@ -110,13 +109,13 @@ def process_men_attendance_import(self, request):
 
         print("processing: " + attendance_type)
         result = process_attendance_worksheet(sheet)
-        totals = []
-        print(result)
-        # payload = {
-        #     "date": result["date"],
-        #     "number_of_mens": result["present"],
-        #     "total": result["present"],
-        # }
+        # totals = []
+        # print(result)
+        # # payload = {
+        # #     "date": result["date"],
+        # #     "number_of_mens": result["present"],
+        # #     "total": result["present"],
+        # # }
         for service in EXCEL_SERVICES:
             print("processing results for: " + service["description"])
             processed_result = process_service_results(result, service["description"])
@@ -299,38 +298,38 @@ def process_attendance_worksheet(data):
     export_date = data["date"]
     members_info = data["items"]
     total = 0
-    total_absent = 0
-    total_present = 0
     services_result = []
 
     for member_row in members_info:
         total += 1
         members = Member.objects.filter(id=member_row[0])
         if members.count() == 1:
-            print("*******************************************")
-            print("Member in analysis: " + member_row[1])
+            # print("*******************************************")
+            # print("Member in analysis: " + member_row[1])
+            attendance = []
             for service in EXCEL_SERVICES:
                 print("Processing service: " + service["description"])
                 is_present = process_service(
                     member_row,
                     service["index"],
-                    service["description"],
                     members,
                     export_date,
                 )
-                print("ATTENDED " + service["description"] + ": " + str(is_present))
-
-                services_result.append(
+                # print("ATTENDED " + service["description"] + ": " + str(is_present))
+                attendance.append(
                     {
                         "service_type": service["description"],
                         "is_present": is_present,
-                        "member_id": member_row[0],
-                        "name": member_row[1],
                         "date": export_date,
                     }
                 )
+            is_member_absent = not any(obj['is_present'] == True for obj in attendance)   
+            print(is_member_absent)             
+            if(is_member_absent):
+                print(members)
+                create_member_absence(export_date, members)
+            services_result.append({'name': member_row[1], 'attendance': attendance})
 
-        # print(services_result)
 
     return services_result
 
@@ -342,31 +341,31 @@ def is_member_present(member_row, service_index):
 def process_service(
     member_row,
     service_index,
-    service_description,
     member_data,
     export_date,
 ):
     is_present = False
-    # print(service_description)
     if is_member_present(member_row, service_index):
         is_present = True
-        # print("started updating last seen date for member with id", member_row[0])
         member_data.update(last_seen=export_date)
-        # print("updated last seen date for member with id", member_row[0])
     else:
         is_present = False
-        delta = export_date - member_data[0].last_seen
-        absentDays = delta.days
-        # print("number of absence days for member with id: ", absentDays)
-        if absentDays > 7:
-            # print("creating absence for member with id", member_row[0])
-            Absence.objects.create(
-                member=member_data[0],
-                contact_phone_number=member_data[0].telephone,
-                last_seen=member_data[0].last_seen,
-            )
-            # print("created absence for member with id", member_row[0])
     return is_present
+
+def create_member_absence(export_date, member_data):
+    print('Creating absence for :')
+    print(member_data)
+    print(member_data[0].last_seen)
+    delta = export_date - member_data[0].last_seen
+    absentDays = delta.days
+    print("number of absence days for member : ", absentDays)
+    if absentDays > 7:
+    # print("creating absence for member with id", member_row[0])
+        Absence.objects.create(
+            member=member_data[0],
+            contact_phone_number=member_data[0].telephone,
+            last_seen=member_data[0].last_seen,
+        )
 
 
 def get_date(raw):

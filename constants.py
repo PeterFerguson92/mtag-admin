@@ -52,6 +52,7 @@ SERVICES = (
     ("01-SERVICE", "1st Service"),
     ("02-SERVICE", "2nd Service"),
     ("03-SERVICE", "3rd Service"),
+    ("04-SERVICE", "Joint Service"),
 )
 
 
@@ -82,3 +83,10 @@ MONTH = (
     ("11-NOVEMBER", "November"),
     ("12-DECEMBER", "December"),
 )
+
+EXCEL_1_SERVICE_INFO = { "index": 2, "description": "01-SERVICE"}
+EXCEL_2_SERVICE_INFO = { "index": 3, "description": "02-SERVICE"}
+EXCEL_3_SERVICE_INFO = { "index": 4, "description": "03-SERVICE"}
+EXCEL_JOINT_SERVICE_INFO = { "index": 5, "description": "04-SERVICE"}
+
+EXCEL_SERVICES = [EXCEL_1_SERVICE_INFO, EXCEL_2_SERVICE_INFO, EXCEL_3_SERVICE_INFO, EXCEL_JOINT_SERVICE_INFO]

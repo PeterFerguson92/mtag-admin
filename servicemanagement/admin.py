@@ -77,7 +77,13 @@ class MemberAdmin(ImportExportModelAdmin):
     )
     search_fields = ["name"]
     readonly_fields = ["last_seen"]
-    actions = ["export_attendace_to_xls", "export_men_attendace_to_xls", "export_women_attendace_to_xls", "export_youth_attendace_to_xls", "export_children_attendace_to_xls"]
+    actions = [
+        "export_attendace_to_xls",
+        "export_men_attendace_to_xls",
+        "export_women_attendace_to_xls",
+        "export_youth_attendace_to_xls",
+        "export_children_attendace_to_xls",
+    ]
     resource_classes = [MemberResource]
 
     def get_search_results(self, request, queryset, search_term):
@@ -99,52 +105,51 @@ class MemberAdmin(ImportExportModelAdmin):
             return f"{instance.house_number} {instance.address} {instance.postcode}"
         except ObjectDoesNotExist:
             return "ERROR!!"
-        
+
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        if request.user.username == 'root':
+        if request.user.username == "root":
             return queryset
-        if request.user.username == 'youth_dpt':
+        if request.user.username == "youth_dpt":
             return queryset.filter(department="YOUTH")
-        if request.user.username == 'women_dpt':
+        if request.user.username == "women_dpt":
             return queryset.filter(department="WOMEN")
-        if request.user.username == 'men_dpt':
+        if request.user.username == "men_dpt":
             return queryset.filter(department="MEN")
-        if request.user.username == 'children_dpt':
+        if request.user.username == "children_dpt":
             return queryset.filter(department="CHILDREN")
-        return queryset    
-    
+        return queryset
+
     def get_actions(self, request):
         actions = super(MemberAdmin, self).get_actions(request)
         print(request.user.groups)
-        if request.user.username == 'root':
+        if request.user.username == "root":
             return actions
-        if request.user.username == 'men_dpt':
-            del actions['export_attendace_to_xls']
+        if request.user.username == "men_dpt":
+            del actions["export_attendace_to_xls"]
             del actions["export_youth_attendace_to_xls"]
             del actions["export_women_attendace_to_xls"]
             del actions["export_children_attendace_to_xls"]
             return actions
-        if request.user.username == 'women_dpt':
-            del actions['export_attendace_to_xls']
+        if request.user.username == "women_dpt":
+            del actions["export_attendace_to_xls"]
             del actions["export_men_attendace_to_xls"]
             del actions["export_youth_attendace_to_xls"]
             del actions["export_children_attendace_to_xls"]
             return actions
-        if request.user.username == 'youth_dpt':
-            del actions['export_attendace_to_xls']
+        if request.user.username == "youth_dpt":
+            del actions["export_attendace_to_xls"]
             del actions["export_men_attendace_to_xls"]
             del actions["export_women_attendace_to_xls"]
             del actions["export_children_attendace_to_xls"]
             return actions
-        if request.user.username == 'children_dpt':
-            del actions['export_attendace_to_xls']
+        if request.user.username == "children_dpt":
+            del actions["export_attendace_to_xls"]
             del actions["export_men_attendace_to_xls"]
             del actions["export_women_attendace_to_xls"]
             del actions["export_youth_attendace_to_xls"]
             return actions
-        return  actions  
-    
+        return actions
 
     @admin.action()
     def export_attendace_to_xls(self, request, queryset):
@@ -155,37 +160,37 @@ class MemberAdmin(ImportExportModelAdmin):
         "Export Attendance to XLS"  # short description
     )
     export_attendace_to_xls.acts_on_all = True
-    
+
     @admin.action()
     def export_men_attendace_to_xls(self, request, queryset):
-        response = export_member_attendace('men_dpt')
+        response = export_member_attendace("men_dpt")
         return response
 
     export_men_attendace_to_xls.short_description = (
         "Export MEN Attendance to XLS"  # short description
     )
-    
+
     @admin.action()
     def export_women_attendace_to_xls(self, request, queryset):
-        response = export_member_attendace('women_dpt')
+        response = export_member_attendace("women_dpt")
         return response
 
     export_women_attendace_to_xls.short_description = (
         "Export WOMEN Attendance to XLS"  # short description
     )
-    
+
     @admin.action()
     def export_youth_attendace_to_xls(self, request, queryset):
-        response = export_member_attendace('youth_dpt')
+        response = export_member_attendace("youth_dpt")
         return response
 
     export_youth_attendace_to_xls.short_description = (
         "Export YOUTH Attendance to XLS"  # short description
     )
-    
+
     @admin.action()
     def export_children_attendace_to_xls(self, request, queryset):
-        response = export_member_attendace('children_dpt')
+        response = export_member_attendace("children_dpt")
         return response
 
     export_children_attendace_to_xls.short_description = (
@@ -199,11 +204,11 @@ class MemberAdmin(ImportExportModelAdmin):
 
     archive_member.short_description = "Archive member/s"  # short description
 
-
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     fields = (
         "date",
+        "service_type",
         "number_of_mens",
         "number_of_women",
         "number_of_youth",
@@ -212,9 +217,10 @@ class AttendanceAdmin(admin.ModelAdmin):
     )
     list_display = (
         "date",
+        "service_type",
         "created_at",
     )
-    readonly_fields=('date',)
+    readonly_fields = ("date",)
     list_filter = ("date",)
 
     def get_urls(self):
@@ -230,19 +236,18 @@ class AttendanceAdmin(admin.ModelAdmin):
 
     def upload_csv(self, request):
         return process_attendance_import(self, request)
-    
+
     def upload_men_csv(self, request):
         return process_men_attendance_import(self, request)
-    
+
     def upload_women_csv(self, request):
         return process_women_attendance_import(self, request)
-    
+
     def upload_youth_csv(self, request):
         return process_youth_attendance_import(self, request)
-    
+
     def upload_children_csv(self, request):
         return process_children_attendance_import(self, request)
-
 
 
 @admin.action()
@@ -325,7 +330,13 @@ class AbsenceAdmin(admin.ModelAdmin):
         "contacted_date",
         "person_of_contact",
     )
-    list_display = ("member_name", "last_seen", "contacted", "member_department", "created_at",)
+    list_display = (
+        "member_name",
+        "last_seen",
+        "contacted",
+        "member_department",
+        "created_at",
+    )
     list_filter = ("member", "member__department", "contacted")
     autocomplete_fields = ["member"]
 
@@ -359,14 +370,14 @@ class AbsenceAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        if request.user.username == 'root':
+        if request.user.username == "root":
             return queryset
-        if request.user.username == 'youth_dpt':
+        if request.user.username == "youth_dpt":
             return queryset.filter(member__department="YOUTH")
-        if request.user.username == 'women_dpt':
+        if request.user.username == "women_dpt":
             return queryset.filter(member__department="WOMEN")
-        if request.user.username == 'men_dpt':
+        if request.user.username == "men_dpt":
             return queryset.filter(member__department="MEN")
-        if request.user.username == 'children_dpt':
+        if request.user.username == "children_dpt":
             return queryset.filter(member__department="CHILDREN")
         return queryset
